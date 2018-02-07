@@ -1,0 +1,148 @@
+<resources>
+
+    <!-- SeekBar des fragments -->
+    <string name="seekbar_img">Icône de la barre</string>
+    <string name="seekbar_max">Valeur maximun</string>
+    <string name="seekbar_min">Valeur minimum</string>
+    <string name="seekbar_state">Etat (si présent)</string>
+    <string name="seekbar_slide">Action - Slider</string>
+    <string name="seekbar_color">Couleur de la barre</string>
+
+    <string name="app_name">Domo Widget</string>
+    <string name="widget_name">Nom du widget</string>
+    <string name="widget_key">Clef API</string>
+    <string name="widget_plugin_key_geo">Clef API du Plugin</string>
+    <string name="widget_plugin_name_geo">URL du Plugin</string>
+    <string name="widget_error">Widget en erreur !</string>
+    <string name="key_error">Clé API non valide (ou vide)</string>
+    <string name="crash_folder">DomoWidget_Logs</string>
+
+    <string name="domo_service">Le service est actuellement démarré...</string>
+
+    <string name="widget_list">Liste des Widgets</string>
+    <string name="no_widget">Aucun widget</string>
+    <string name="new_widget">Nouveau widget</string>
+    <string name="not_on_screen">(non affiché)</string>
+    <string name="widget_state">Etat</string>
+    <string name="widget_webcam_capture">URL de capture</string>
+    <string name="widget_webcam_port">Port</string>
+    <string name="widget_lock">Verrouillage Widget</string>
+
+    <string name="no_value">--.-</string>
+    <string name="too_long">Problème Affichage</string>
+    <string name="error">Erreur !</string>
+    <string name="widget_empty">Widget Vide !</string>
+    <string name="widget_webcam_snapshot">/snapshot.cgi?user=#username#&amp;pwd=#password#</string>
+
+    <string name="box_name_value">Box - Domo Widget</string>
+    <string name="widget_on">Action - Activée</string>
+    <string name="widget_off">Action - Désactivée</string>
+    <string name="widget_unite">Unité</string>
+    <string name="widget_color">Couleur de fond</string>
+    <string name="widget_text_color">Couleur du libellé des widgets</string>
+    <string name="widget_text_size">Taille du libellé des widgets</string>
+    <string name="widget_refresh_time">Rafraîchissement forcé</string>
+    <string name="widget_update">Mise à jour manuelle</string>
+    <string name="widget_vocal">Synthèse Vocale</string>
+    <string name="widget_vocal_speak">Vous pouvez parler…</string>
+    <string name="widget_vocal_key_phrase">Mot clef (écoute permanente)</string>
+    <string name="widget_vocal_error">Appareil non compatible avec la reconnaissance vocale</string>
+    <string name="widget_vocal_warning">Seul le premier widget Vocal prend en compte l\'écoute permanente</string>
+
+    <string name="widget_reg">Valeur spécifique - On</string>
+    <string name="widget_wait">Attente avant retour d\'état (s)</string>
+
+    <string name="widget_setting">Configuration</string>
+    <string name="widget_action_list">Liste des actions</string>
+    <string name="widget_action_name">Nom de l\'action</string>
+    <string name="widget_action_image_picture">Image de l\'action</string>
+    <string name="widget_action_image_on">Image Action - Activée</string>
+    <string name="widget_action_image_off">Image Action - Desactivée</string>
+    <string name="widget_action_setting">Gestion de l\'action</string>
+    <string name="widget_action_new">Nouvelle action</string>
+    <string name="widget_save">Sauvegarder</string>
+
+    <string name="widget_gps_id_plugin">Identifiant plugin</string>
+    <string name="widget_gps_intervalle">Intervalle minimum (min)</string>
+    <string name="widget_gps_distance">Distance minimum (m)</string>
+    <string name="widget_gps_fournisseur">Fournisseur GPS</string>
+
+    <string name="del_title">Confirmation</string>
+    <string name="del_message">Voulez vous supprimer l\'objet ?</string>
+
+    <string name="widget_save_popup">Sauvegarde du widget</string>
+    <string name="test_popup">Test de la configuration en cours...</string>
+    <string name="widget_problem_popup">Problème de communication !</string>
+    <string name="widget_message_popup">L\'état du widget ne remonte pas correctement. Voulez-vous continuer ?</string>
+    <string name="widget_yes_popup">Oui</string>
+    <string name="widget_no_popup">Non</string>
+    <string name="widget_ok_popup">Ok</string>
+    <string name="widget_to_long">widget trop grand...</string>
+    <string name="widget_busy">En cours…</string>
+
+    <string name="file_path">Chemin :</string>
+    <string name="title_activity_manage">Domo Widget - Configuration</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Titre des fragments -->
+    <string name="fragment_configuration">Gestion Box Domotique</string>
+    <string name="fragment_upload_pic">Gestion des icônes</string>
+    <string name="fragment_action">Widgets - Action</string>
+    <string name="fragment_push">Widgets - Push</string>
+    <string name="fragment_multi">Widgets - Multi-Actions</string>
+    <string name="fragment_info">Widgets - Info</string>
+    <string name="fragment_gps">Widgets - GPS</string>
+    <string name="fragment_vocal">Widgets - Vocal</string>
+    <string name="fragment_wear">Android - Wear</string>
+    <string name="fragment_seekbar">Widgets - SeekBar</string>
+    <string name="fragment_webcam">Widgets - Webcam</string>
+
+    <string name="box_message_popup">Vérifier la configuration de la box domotique.</string>
+    <string name="box_testing">Test de la configuration en cours...</string>
+    <string name="box_save_popup">Sauvegarde de la box</string>
+    <string name="box_name">Nom de la box Domotique</string>
+    <string name="box_url_ext">Accès externe</string>
+    <string name="box_url_int">Accès interne</string>
+    <string name="default_time_out">Par défaut</string>
+    <string name="box_time_out">Temps de réponse</string>
+    <string name="no_box">Aucune Box Domotique</string>
+    <string name="select_box">Sélectionner une box</string>
+    <string name="new_box">BOX DOMOTIQUE</string>
+    <string name="list_box_name">Liste des Box Domotiques</string>
+    <string name="save_box">Configuration enregistrée</string>
+
+    <string name="wear_box">Box associée à votre montre</string>
+    <string name="wear_time_out">Attente avant interaction (s)</string>
+    <string name="shake_time_out">Attente entre deux shakes (s)</string>
+    <string name="shake_level">Sensibilité du shake</string>
+    <string name="wear_title">Montre connectée</string>
+    <string name="wear_node">Aucune</string>
+    <string name="wear_disable">DÉSACTIVE</string>
+    <string name="threshold_level">Seuil de détection</string>
+
+    <string name="error_name">Le nom est obligatoire !</string>
+    <string name="error_url_ext">Une adresse est obligatoire !</string>
+    <string name="error_http">http / https ?</string>
+    <string name="error_key">La clef API est obligatoire pour Jeedom !</string>
+
+    <string name="export">Exporter</string>
+    <string name="export_ok">Exportation terminée</string>
+    <string name="export_send_title">Sauvegarde - DomoWidget</string>
+    <string name="export_result">Résultat</string>
+
+    <string name="import_backup">Importer</string>
+    <string name="import_file">Contenu du fichier</string>
+    <string name="file_ok">Le fichier est valide !</string>
+    <string name="file_ko">Le fichier n\'est pas valide !</string>
+    <string name="import_ok">Importation terminée !</string>
+
+    <string name="export_loading">Exportation en cours...</string>
+    <string name="bdd_update">Chargerment en cous...</string>
+
+    <string name="paypal">Faire un don</string>
+    <string name="forum">Forum Jeedom</string>
+    <string name="tutoriel">Tutoriel</string>
+
+</resources>

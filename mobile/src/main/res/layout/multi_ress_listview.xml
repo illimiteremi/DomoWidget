@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_border">
+
+        <ImageView
+            android:id="@+id/buttonOn"
+            android:src="@drawable/arcade_red_release"
+            android:layout_height="30sp"
+            android:layout_width="30sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp" />
+
+        <TextView
+            android:text="Nom de l'action"
+            android:id="@+id/textActionName"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/buttonOn"
+            android:textColor="@android:color/background_light" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:id="@+id/buttonSetting"
+            android:background="#00ffffff"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_manage"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/button"
+            android:layout_height="30sp"
+            android:layout_marginBottom="3dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:id="@+id/button"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="#00ffffff"
+            android:scaleType="fitCenter"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_height="30sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp" />
+
+</RelativeLayout>
+
+
+

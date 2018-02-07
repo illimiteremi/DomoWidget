@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="3"
+        android:paddingTop="20dp">
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="25dp"
+            android:background="@drawable/bg_seekbar_widget"
+            android:columnWidth="20dp"
+            android:numColumns="40"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:scrollbars="none"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/widgetImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/light_on"
+            android:scaleType="fitCenter" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1.5">
+
+        <TextView
+            android:id="@+id/widgetName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="2"
+            android:maxLines="2"
+            android:shadowColor="#000000"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:textAlignment="center"
+            android:textColor="#ffffff" />
+
+    </FrameLayout>
+
+</LinearLayout>
+

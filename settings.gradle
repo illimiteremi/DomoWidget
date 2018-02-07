@@ -1,0 +1,1 @@
+include ':mobile', ':colorpicker', ':wear', 'pocketsphinx'

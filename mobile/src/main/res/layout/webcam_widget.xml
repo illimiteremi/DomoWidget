@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="3">
+
+        <ImageButton
+            android:id="@+id/widgetButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/widget_webcam_preview"
+            android:visibility="visible" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="0.5">
+
+        <TextView
+            android:id="@+id/widgetName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="2"
+            android:maxLines="2"
+            android:shadowColor="#000000"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:textAlignment="center"
+            android:textColor="#ffffff" />
+
+    </FrameLayout>
+
+</LinearLayout>
+

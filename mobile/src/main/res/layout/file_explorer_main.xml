@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:background="#dadada"
+            android:text="@string/file_path"
+            android:textSize="18sp"
+            android:paddingLeft="5dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:textSize="18sp"
+            android:ems="10"
+            android:id="@+id/editPath"
+            android:background="#dadada"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/path"
+            android:layout_alignBottom="@+id/path"
+            android:imeOptions="actionSearch"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pas de fichier" />
+
+</LinearLayout>

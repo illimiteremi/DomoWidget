@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/fragment_configuration" />
+        <item
+        android:id="@+id/nav_upload_pic"
+        android:icon="@drawable/ic_menu_palette"
+        android:title="@string/fragment_upload_pic" />
+    </group>
+
+    <item android:title="Configuration - Widgets">
+        <menu>
+            <item
+                android:id="@+id/action"
+                android:icon="@drawable/ic_menu_action"
+                android:title="Action" />
+            <item
+                android:id="@+id/push"
+                android:icon="@drawable/ic_menu_push"
+                android:title="Push" />
+            <item
+                android:id="@+id/seekBar"
+                android:icon="@drawable/ic_menu_seekbar"
+                android:title="SeekBar" />
+            <item
+                android:id="@+id/mutli"
+                android:icon="@drawable/ic_menu_multiaction"
+                android:title="Multi-Action" />
+            <item
+                android:id="@+id/info"
+                android:icon="@drawable/ic_menu_info"
+                android:title="Info" />
+            <item
+                android:id="@+id/webcam"
+                android:icon="@drawable/ic_menu_webcam"
+                android:title="Webcam" />
+            <item
+                android:id="@+id/gps"
+                android:icon="@drawable/ic_menu_location"
+                android:title="GPS" />
+            <item
+                android:id="@+id/vocal"
+                android:icon="@drawable/ic_menu_vocal"
+                android:title="Vocal" />
+            <item
+                android:id="@+id/wear"
+                android:icon="@drawable/ic_menu_wear"
+                android:title="Android Wear" />
+        </menu>
+    </item>
+
+    <item android:title="Sauvegarder">
+        <menu>
+            <item
+                android:id="@+id/exporter"
+                android:icon="@drawable/ic_menu_upload_black"
+                android:title="Exporter" />
+            <item
+                android:id="@+id/importer"
+                android:icon="@drawable/ic_menu_download"
+                android:title="Importer" />
+        </menu>
+    </item>
+
+    <item android:title="Participer">
+        <menu>
+            <item
+                android:id="@+id/paypal"
+                android:icon="@drawable/ic_menu_paypal"
+                android:title="@string/paypal" />
+
+            <item
+                android:id="@+id/forum"
+                android:icon="@drawable/ic_menu_tuto"
+                android:title="@string/tutoriel" />
+        </menu>
+    </item>
+</menu>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemName"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:text="Nom de la ressource"
+    android:layout_alignParentEnd="true"
+    android:textColor="#000000"
+    android:gravity="center_vertical"
+    android:background="#f0efef"
+    android:paddingStart="10dp"
+    android:paddingEnd="5dp"
+    android:layout_alignParentStart="true"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp" />

@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+
+    defaultConfig {
+        applicationId rootProject.ext.applicationId
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
+
+    signingConfigs {
+        GOOGLE_PLAY_KEY {
+            keyAlias rootProject.ext.keystoreProperties['KEY_ALIAS']
+            keyPassword rootProject.ext.keystoreProperties['KEY_PASSWORD']
+            storeFile file(rootProject.ext.keystoreProperties['STORE_FILE'])
+            storePassword rootProject.ext.keystoreProperties['STORE_PASSWORD']
+        }
+    }
+
+    buildTypes {
+
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "DomoWidget_${versionName}_${versionCode}.apk";
+            }
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.GOOGLE_PLAY_KEY
+        }
+
+        debug {
+            debuggable true
+        }
+
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/okio-1.13.0.jar')
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:support-v4:27.0.2'
+    implementation project(path: ':colorpicker')
+    implementation project(':pocketsphinx')
+    implementation 'com.google.android.gms:play-services-wearable:11.8.0'
+    wearApp project(':wear')
+    implementation files('libs/okhttp-3.9.1.jar')
+    implementation files('libs/firebase-jobdispatcher-with-gcm-dep-0.8.5.aar')
+    implementation files('libs/pocketsphinx-android-5prealpha-release.aar')
+}

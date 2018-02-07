@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:gravity="center">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="3">
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/widgetButton"
+            android:background="#00ffffff"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_gps_green"
+            android:scaleType="fitCenter"
+            android:visibility="visible"
+            android:layout_margin="5dp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1.5">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Domo Widget"
+            android:id="@+id/widgetName"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:maxLines="2"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:layout_gravity="center_horizontal|top"
+            android:lines="2"
+            android:textIsSelectable="true"
+            android:shadowColor="#000000"
+            android:shadowDy="5"
+            android:shadowRadius="5"/>
+
+    </FrameLayout>
+
+</LinearLayout>
+

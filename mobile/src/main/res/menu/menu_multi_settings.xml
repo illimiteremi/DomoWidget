@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/add_action"
+        android:orderInCategory="0"
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Ajout une action" />
+
+    <item
+        android:id="@+id/save_action"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Sauvegarder" />
+
+    <item
+        android:id="@+id/delete_action"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Supprimer" />
+
+</menu>

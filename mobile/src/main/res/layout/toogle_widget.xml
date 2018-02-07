@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="3">
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/widgetButton"
+            android:background="#00ffffff"
+            android:layout_gravity="center_horizontal"
+            android:scaleType="fitCenter"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/unlockButton"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            android:src="@drawable/lock"
+            android:background="#00ffffff" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1.5">
+
+        <TextView
+            android:id="@+id/widgetName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:lines="2"
+            android:maxLines="2"
+            android:shadowColor="#000000"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:textAlignment="center"
+            android:textColor="#ffffff" />
+
+    </FrameLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Domo Widget</string>
+    <string name="interaction_send">Envoi en cours...</string>
+    <string name="interaction_title">Interaction Jeedom</string>
+    <string name="setting_change">Nouvelle configuration !</string>
+    <string name="error">Problème de communication !</string>
+</resources>

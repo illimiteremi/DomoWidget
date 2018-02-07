@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
+ext {
+    applicationId = "illimiteremi.domowidget"
+    versionCode   = 226
+    versionName   = '6.1'
+
+    // Load keystore
+    keystorePropertiesFile = rootProject.file("keystore.properties");
+    keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+allprojects {
+    repositories {
+        google()
+    }
+}

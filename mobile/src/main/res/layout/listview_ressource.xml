@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ressourceLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f0efef"
+    android:focusable="false">
+
+        <ImageView
+            android:id="@+id/imageButtonOn"
+            android:src="@drawable/arcade_red_release"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10dp"
+            android:padding="5dp" />
+
+        <TextView
+            android:text="Nom de l'action"
+            android:id="@+id/ressourceName"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imageButtonOn"
+            android:textColor="@android:color/background_dark" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:id="@+id/buttonDel"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="#00ffffff"
+            android:scaleType="fitCenter"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
+
+
+

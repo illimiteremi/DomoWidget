@@ -6,10 +6,6 @@
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/fragment_configuration" />
-        <item
-        android:id="@+id/nav_upload_pic"
-        android:icon="@drawable/ic_menu_palette"
-        android:title="@string/fragment_upload_pic" />
     </group>
 
     <item android:title="Configuration - Widgets">
@@ -50,6 +46,15 @@
                 android:id="@+id/wear"
                 android:icon="@drawable/ic_menu_wear"
                 android:title="Android Wear" />
+        </menu>
+    </item>
+
+    <item android:title="Personnalisation">
+        <menu>
+            <item
+                android:id="@+id/nav_upload_pic"
+                android:icon="@drawable/ic_menu_palette"
+                android:title="@string/fragment_upload_pic" />
         </menu>
     </item>
 

@@ -32,6 +32,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.GOOGLE_PLAY_KEY
+            zipAlignEnabled true
         }
 
         debug {
@@ -54,4 +55,5 @@ dependencies {
     implementation files('libs/okhttp-3.9.1.jar')
     implementation files('libs/firebase-jobdispatcher-with-gcm-dep-0.8.5.aar')
     implementation files('libs/pocketsphinx-android-5prealpha-release.aar')
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 }

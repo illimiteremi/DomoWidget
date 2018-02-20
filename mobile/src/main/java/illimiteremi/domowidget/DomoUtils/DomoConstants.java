@@ -148,7 +148,7 @@ public class DomoConstants {
     public static final String BOX_PING       = "BOX_PING";
     public static final String BOX_MESSAGE    = "BOX_MESSAGE";
     public static final String REQUEST_WEBCAM = "WEBCAM";
-
+    public static final String WIDGET_VALUE   = "WIDGET_VALUE";
 
     // STATE
     public static final String  UPDATE_ALL_WIDGET_STATE    = "android.appwidget.action.STATE_WIDGET_UPDATE_ALL";

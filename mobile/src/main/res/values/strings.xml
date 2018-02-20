@@ -100,7 +100,7 @@
     <string name="fragment_webcam">Widgets - Webcam</string>
 
     <string name="box_message_popup">Vérifier la configuration de la box domotique.</string>
-    <string name="box_testing">Test de la configuration en cours...</string>
+    <string name="box_testing">Test de la configuration en cours…</string>
     <string name="box_save_popup">Sauvegarde de la box</string>
     <string name="box_name">Nom de la box Domotique</string>
     <string name="box_url_ext">Accès externe</string>
@@ -131,18 +131,19 @@
     <string name="export_ok">Exportation terminée</string>
     <string name="export_send_title">Sauvegarde - DomoWidget</string>
     <string name="export_result">Résultat</string>
+    <string name="advanced_setting">Paramètres avancés</string>
 
-    <string name="import_backup">Importer</string>
+        <string name="import_backup">Importer</string>
     <string name="import_file">Contenu du fichier</string>
     <string name="file_ok">Le fichier est valide !</string>
     <string name="file_ko">Le fichier n\'est pas valide !</string>
     <string name="import_ok">Importation terminée !</string>
 
-    <string name="export_loading">Exportation en cours...</string>
-    <string name="bdd_update">Chargerment en cous...</string>
+    <string name="export_loading">Exportation en cours…</string>
+    <string name="bdd_update">Chargerment en cous…</string>
 
-    <string name="paypal">Faire un don</string>
+    <string name="paypal">Un petit coup de main ?</string>
     <string name="forum">Forum Jeedom</string>
-    <string name="tutoriel">Tutoriel</string>
+    <string name="tutoriel">DomoWidget</string>
 
 </resources>

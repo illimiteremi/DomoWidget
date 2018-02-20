@@ -1,6 +1,5 @@
 package illimiteremi.domowidget.DomoServices;
 
-import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -25,16 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.cert.CertificateException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
@@ -55,18 +45,21 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.ERROR;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.JEEDOM_API_URL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.JEEDOM_URL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.MATCH;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.MOBILE_TIME_OUT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_MATCH;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PING_ACTION;
-import static illimiteremi.domowidget.DomoUtils.DomoConstants.READ_TIME_OUT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_GEOLOC;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_WEBCAM;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.WIDGET_VALUE;
 
 public class DomoIntentService extends IntentService {
 
     private static final String TAG            = "[DOMO_INTENT_SERVICE]";
-    private static final String WIDGET_VALUE   = "WIDGET_VALUE";
+
+    private final DomoOkhttp domoOkhttp;
+    private OkHttpClient     okHttpClient;
 
     // OkHttpCallback (callback utilisé pour les widgets)
     private class OkHttpCallback implements Callback {
@@ -84,8 +77,8 @@ public class DomoIntentService extends IntentService {
             Log.e(TAG, "onFailure : " + e);
             if (reTryRequest != null) {
                 Log.d(TAG, "Nouvelle tentative sur la 2em url...");
-                final OkHttpClient client = getOkHttpClient(DomoConstants.MOBILE_TIME_OUT);
-                client.newCall(reTryRequest).enqueue(new OkHttpCallback(widget, null));
+                okHttpClient = domoOkhttp.setBuilder(MOBILE_TIME_OUT);
+                okHttpClient.newCall(reTryRequest).enqueue(new OkHttpCallback(widget, null));
             } else {
                 sendErrorToProvider(widget);
             }
@@ -135,8 +128,100 @@ public class DomoIntentService extends IntentService {
         }
     }
 
+    // OkHttpBoxCallback (callback utilisé pour le ping de la box)
+    private class OkHttpBoxCallback implements Callback {
+
+        public OkHttpBoxCallback() {
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.e(TAG, "onFailure : " + e);
+            sendTestResponseToProvider(false, e.getMessage());
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+
+            Boolean pingOK;
+            try {
+                String jsonData = response.body().string();
+                Log.d(TAG, "réponse de Jeedom : " + jsonData);
+                JSONObject jsonObject = new JSONObject(jsonData);
+                pingOK = jsonObject.getString("result").contains("pong");
+                sendTestResponseToProvider(pingOK,"OK");
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur : " + e);
+                sendTestResponseToProvider(false, e.getMessage());
+            }
+        }
+    }
+
+    // OkHttpWebCamCallback (callback utilisé pour le téléchargement de l'image webcam)
+    private class OkHttpWebCamCallback implements Callback {
+
+        final DomoSerializableWidget widget;
+        final Request                reTryRequest;
+        final int                    widgetWidth;
+
+        public OkHttpWebCamCallback(DomoSerializableWidget widget, Request request) {
+            this.widget       = widget;
+            this.reTryRequest = request;
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+            Bundle widgetOption = appWidgetManager.getAppWidgetOptions(widget.getDomoId());
+            widgetWidth = widgetOption.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.e(TAG, "onFailure : " + e);
+            if (reTryRequest != null) {
+                Log.d(TAG, "Nouvelle tentative sur la 2em url...");
+                okHttpClient = domoOkhttp.setBuilder(MOBILE_TIME_OUT);
+                okHttpClient.newCall(reTryRequest).enqueue(new OkHttpWebCamCallback(widget, null));
+            } else {
+                sendErrorToProvider(widget);
+            }
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            try {
+                String fileName = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + widget.getDomoId() + ".jpg" ;
+                File file = new File (fileName);
+                if (file.exists ()) {
+                    file.delete ();
+                }
+                // Get picture from Webcam
+                ResponseBody in = response.body();
+                InputStream inputStream = in.byteStream();
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+                Bitmap bitmap = BitmapFactory.decodeStream(bufferedInputStream);
+                // Convert bitmap to file
+                OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                DomoBitmapUtils domoBitmapUtils = new DomoBitmapUtils(getApplicationContext());
+                bitmap = domoBitmapUtils.addBorderToBitmap(bitmap,5, Color.WHITE);
+                Bitmap scaleBitmap = domoBitmapUtils.scaleDown(bitmap, widgetWidth, false);
+                scaleBitmap.compress(Bitmap.CompressFormat.JPEG,100, os);
+                bitmap.recycle();
+                scaleBitmap.recycle();
+                //Log.d(TAG, "Fichier : " + bitmap.getHeight() + " / " + bitmap.getWidth());
+                os.close();
+                Log.d(TAG, "Fichier enregistrée sous : " + fileName);
+                sendToProvider(DONE, widget);
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur : " + e);
+                sendTestResponseToProvider(false, e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Constructeur
+     */
     public DomoIntentService() {
         super("DomoIntentService");
+        domoOkhttp = DomoOkhttp.getInstance();
     }
 
     @Override
@@ -181,38 +266,9 @@ public class DomoIntentService extends IntentService {
      */
     private void sendRequestForTest(final BoxSetting boxSetting) {
 
-        // OkHttpBoxCallback (callback utilisé pour le ping de la box)
-        class OkHttpBoxCallback implements Callback {
-
-            public OkHttpBoxCallback() {
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "onFailure : " + e);
-                sendTestResponseToProvider(false, e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-
-                Boolean pingOK;
-                try {
-                    String jsonData = response.body().string();
-                    Log.d(TAG, "réponse de Jeedom : " + jsonData);
-                    JSONObject jsonObject = new JSONObject(jsonData);
-                    pingOK = jsonObject.getString("result").contains("pong");
-                    sendTestResponseToProvider(pingOK,"OK");
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur : " + e);
-                    sendTestResponseToProvider(false, e.getMessage());
-                }
-            }
-        }
-
         // TimeOut
         Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
-        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
         Integer requestTimeOut;
 
         // Création de la requete http suivant le type de connexion
@@ -235,8 +291,8 @@ public class DomoIntentService extends IntentService {
                 request = new Request.Builder().url(boxSetting.getBoxUrlExterne() + JEEDOM_API_URL).post(body).build();
             }
             // Execution de la requete
-            final OkHttpClient client = getOkHttpClient(requestTimeOut);
-            client.newCall(request).enqueue(new OkHttpBoxCallback());
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpBoxCallback());
         } catch (OutOfMemoryError outOfMemoryError) {
             Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
             sendTestResponseToProvider(false, "OutOfMemoryError");
@@ -255,7 +311,7 @@ public class DomoIntentService extends IntentService {
 
         // TimeOut
         Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
-        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
         Integer requestTimeOut;
 
         // Request Http
@@ -295,8 +351,8 @@ public class DomoIntentService extends IntentService {
                     reTryRequest = null;
                 }
             }
-            final OkHttpClient client = getOkHttpClient(requestTimeOut);
-            client.newCall(request).enqueue(new OkHttpCallback(widget, reTryRequest));
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpCallback(widget, reTryRequest));
         } catch (OutOfMemoryError outOfMemoryError) {
             Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
             sendErrorToProvider(widget);
@@ -312,63 +368,9 @@ public class DomoIntentService extends IntentService {
      * @param widget
      */
     private void getWebCamPictureFromToJeedom(final BoxSetting boxSetting, final DomoSerializableWidget widget){
-
-        // OkHttpWebCamCallback (callback utilisé pour le téléchargement de l'image webcam)
-        class OkHttpWebCamCallback implements Callback {
-
-            final DomoSerializableWidget widget;
-            final Request                reTryRequest;
-            final int                    widgetWidth;
-
-            public OkHttpWebCamCallback(DomoSerializableWidget widget, Request request) {
-                this.widget       = widget;
-                this.reTryRequest = request;
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
-                Bundle widgetOption = appWidgetManager.getAppWidgetOptions(widget.getDomoId());
-                widgetWidth = widgetOption.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "onFailure : " + e);
-                sendErrorToProvider(widget);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    String fileName = getApplicationContext().getFilesDir().getAbsolutePath() + "/" + widget.getDomoId() + ".jpg" ;
-                    File file = new File (fileName);
-                    if (file.exists ()) {
-                        file.delete ();
-                    }
-                    // Get picture from Webcam
-                    ResponseBody in = response.body();
-                    InputStream inputStream = in.byteStream();
-                    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-                    Bitmap bitmap = BitmapFactory.decodeStream(bufferedInputStream);
-                    // Convert bitmap to file
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-                    DomoBitmapUtils domoBitmapUtils = new DomoBitmapUtils(getApplicationContext());
-                    bitmap = domoBitmapUtils.addBorderToBitmap(bitmap,5, Color.WHITE);
-                    Bitmap scaleBitmap = domoBitmapUtils.scaleDown(bitmap, widgetWidth, false);
-                    scaleBitmap.compress(Bitmap.CompressFormat.JPEG,100, os);
-                    bitmap.recycle();
-                    scaleBitmap.recycle();
-                    //Log.d(TAG, "Fichier : " + bitmap.getHeight() + " / " + bitmap.getWidth());
-                    os.close();
-                    Log.d(TAG, "Fichier enregistrée sous : " + fileName);
-                    sendToProvider(DONE, widget);
-                } catch (Exception e) {
-                    Log.e(TAG, "Erreur : " + e);
-                    sendTestResponseToProvider(false, e.getMessage());
-                }
-            }
-        }
-
         // TimeOut
         Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
-        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
         Integer requestTimeOut;
 
         // Request Http
@@ -409,8 +411,8 @@ public class DomoIntentService extends IntentService {
                     reTryRequest = null;
                 }
             }
-            final OkHttpClient client =  getOkHttpClient(requestTimeOut);
-            client.newCall(request).enqueue(new OkHttpWebCamCallback(widget, reTryRequest));
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpWebCamCallback(widget, reTryRequest));
         } catch (OutOfMemoryError outOfMemoryError) {
             Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
             sendErrorToProvider(widget);
@@ -429,7 +431,7 @@ public class DomoIntentService extends IntentService {
 
         // TimeOut
         Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
-        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
         Integer requestTimeOut;
 
         // Request Http
@@ -472,8 +474,8 @@ public class DomoIntentService extends IntentService {
                     reTryRequest = null;
                 }
             }
-            final OkHttpClient client =  getOkHttpClient(requestTimeOut);
-            client.newCall(request).enqueue(new OkHttpCallback(widget, reTryRequest));
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpCallback(widget, reTryRequest));
         } catch (OutOfMemoryError outOfMemoryError) {
             Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
             sendErrorToProvider(widget);
@@ -568,60 +570,5 @@ public class DomoIntentService extends IntentService {
             }
         }
         return false;
-    }
-
-    /**
-     * Creation d'un client okHttp (with self secure HTTPS)
-     * @param connectTimeout
-     * @return
-     */
-    private OkHttpClient getOkHttpClient(int connectTimeout) {
-        try {
-            // Create a trust manager that does not validate certificate chains
-            final TrustManager[] trustAllCerts = new TrustManager[] {
-                    new X509TrustManager() {
-                        @SuppressLint("TrustAllX509TrustManager")
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @SuppressLint("TrustAllX509TrustManager")
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    }
-            };
-
-            // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            // Create an ssl socket factory with our all-trusting manager
-            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
-            final OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //noinspection deprecation
-            builder.sslSocketFactory(sslSocketFactory);
-            builder.hostnameVerifier(new HostnameVerifier() {
-                @SuppressLint("BadHostnameVerifier")
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            builder.connectTimeout(connectTimeout, TimeUnit.SECONDS);
-            builder.readTimeout(READ_TIME_OUT, TimeUnit.SECONDS);
-            return builder.build();
-        } catch (OutOfMemoryError outOfMemoryError) {
-            Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
-            return null;
-        } catch (Exception e) {
-            Log.e(TAG,"Erreur " + e);
-            return null;
-        }
     }
 }

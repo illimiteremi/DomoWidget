@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import illimiteremi.domowidget.R;
@@ -51,6 +52,7 @@ public class WebViewFragment extends Fragment {
         webView = (WebView) view.findViewById(R.id.webView);
         webView.getSettings().setUserAgentString("Android");
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         webView.setWebChromeClient(new WebChromeClient() {
             private ProgressDialog mProgress;
             @Override
@@ -74,5 +76,4 @@ public class WebViewFragment extends Fragment {
         webView.requestFocus();
         return view;
     }
-
 }

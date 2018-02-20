@@ -48,6 +48,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:text="@string/box_name"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -110,29 +111,12 @@
                         tools:ignore="HardcodedText" />
 
                     <TextView
-                        android:id="@+id/timeOutLevel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/box_time_out"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <SeekBar
-                        android:id="@+id/timeOutSeekBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:max="10"
-                        android:progress="1" />
-
-                    <TextView
                         android:id="@+id/textViewClef"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:text="@string/widget_key"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -149,67 +133,114 @@
                         android:paddingStart="5dp"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/textViewCouleur"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/widget_text_color"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
+                    <TableRow
+                        android:layout_width="fill_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@android:color/black"
-                        android:padding="1dp">
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/bg_border"
+                        android:gravity="center"
+                        android:paddingStart="2dp"
+                        android:paddingTop="2dp"
+                        android:stretchColumns="0,1,2">
 
                         <TextView
-                            android:id="@+id/editColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="@string/advanced_setting"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#ffffff"
+                            android:textSize="18sp" />
+
+                    </TableRow>
+
+                        <TextView
+                            android:id="@+id/timeOutLevel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/box_time_out"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <SeekBar
+                            android:id="@+id/timeOutSeekBar"
                             android:layout_width="match_parent"
-                            android:layout_height="23dp"
-                            android:background="@android:color/black" />
-                    </FrameLayout>
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="#ffffff"
+                            android:max="10"
+                            android:progress="1" />
 
-                    <TextView
-                        android:id="@+id/textTextSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/widget_text_size"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/textViewCouleur"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/widget_text_color"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-                    <SeekBar
-                        android:id="@+id/sizeSeekBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:max="50"
-                        android:progress="1" />
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@android:color/black"
+                            android:padding="1dp">
 
-                    <TextView
-                        android:id="@+id/textRefreshTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/widget_text_size"
-                        android:textColor="#000000"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/editColor"
+                                android:layout_width="match_parent"
+                                android:layout_height="23dp"
+                                android:background="@android:color/black" />
+                        </FrameLayout>
 
-                    <SeekBar
-                        android:id="@+id/refreshTimeSeekBar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:max="120"
-                        android:progress="1"/>
+                        <TextView
+                            android:id="@+id/textTextSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/widget_text_size"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <SeekBar
+                            android:id="@+id/sizeSeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:background="#ffffff"
+                            android:max="50"
+                            android:progress="1" />
+
+                        <TextView
+                            android:id="@+id/textRefreshTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/widget_text_size"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <SeekBar
+                            android:id="@+id/refreshTimeSeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:max="120"
+                            android:progress="1"
+                            android:background="#ffffff"/>
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
     </FrameLayout>
 </ScrollView>

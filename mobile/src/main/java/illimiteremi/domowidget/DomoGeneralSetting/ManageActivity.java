@@ -6,6 +6,8 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -22,7 +24,9 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.BoxSettingFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.IconSettingFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.WearSettingFragment;
@@ -43,6 +47,7 @@ import illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget;
 import illimiteremi.domowidget.R;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.LOCATION_LABEL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.MULTI_LABEL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PERMISSION_OK;
@@ -130,11 +135,34 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
             }
         } else {
             Log.d(TAG, "Ouverture de DomoWidget...");
-            myFragment = new BoxSettingFragment();
+            Random random = new Random();
+            Boolean paypal           = random.nextInt(2) == 0 ? true : false;
+            Boolean boxExist         = DomoUtils.getAllObjet(context, BOX).size() == 0 ? false : true;
+            Boolean networkAvailable = isNetworkAvailable();
+            extras                   = new Bundle();
+            myFragment               = new BoxSettingFragment();
+
+            if (networkAvailable) {
+                if (boxExist) {
+                    if (paypal) {
+                        extras.putString("URL", URL_PAYPAL);
+                        extras.putString("TITLE", getString(R.string.paypal));
+                        myFragment = new WebViewFragment();
+                    } else {
+                        drawer.openDrawer(GravityCompat.START);
+                    }
+                } else {
+                    extras.putString("URL", URL_WORDPRESS);
+                    extras.putString("TITLE", getString(R.string.tutoriel));
+                    myFragment = new WebViewFragment();
+                }
+            } else {
+                drawer.openDrawer(GravityCompat.START);
+            }
+            myFragment.setArguments(extras);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, myFragment).commitAllowingStateLoss();
             toggle.syncState();
-            drawer.openDrawer(GravityCompat.START);
         }
 
         // Démarrage des services si nécessaire.
@@ -242,6 +270,16 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
                 }
             }
         }
+    }
+
+    /**
+     * Check internet
+     * @return
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
     /**

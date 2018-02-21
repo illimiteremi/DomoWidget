@@ -1,19 +1,20 @@
 package illimiteremi.domowidget.DomoServices;
 
-
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 
-import java.security.KeyStore;
-import java.util.Arrays;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
@@ -26,10 +27,25 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.READ_TIME_OUT;
 
 public class DomoOkhttp {
 
-    private static final String TAG            = "[DOMO_OKHTTP]";
+    private static final String TAG         = "[DOMO_OKHTTP]";
 
-    private OkHttpClient client;
-    private static DomoOkhttp INSTANCE = null;
+    private OkHttpClient        client;
+    private static DomoOkhttp   INSTANCE    = null;
+
+    static class TrustAllX509TrustManager implements X509TrustManager {
+        public static final X509TrustManager INSTANCE = new TrustAllX509TrustManager();
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException { }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException { }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return new X509Certificate[0];
+        }
+    }
 
     /**
      * Constructeur Privé
@@ -37,33 +53,43 @@ public class DomoOkhttp {
     private DomoOkhttp() {
         Log.d(TAG, "Create DomoOkhttp Instance...");
         try {
-            // Install the all-trusting trust manager
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            trustManagerFactory.init((KeyStore) null);
-            TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-            if (trustManagers.length != 1 || !(trustManagers[0] instanceof X509TrustManager)) {
-                throw new IllegalStateException("Unexpected default trust managers:" + Arrays.toString(trustManagers));
-            }
-            X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-            sslContext.init(null, new TrustManager[] { trustManager }, null);
-            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
-
             client = new OkHttpClient.Builder()
-                    .sslSocketFactory(sslSocketFactory, trustManager)
+                    .sslSocketFactory(
+                            sslContext(null,
+                                    new TrustManager[] {TrustAllX509TrustManager.INSTANCE}).getSocketFactory(),
+                            TrustAllX509TrustManager.INSTANCE)
+                   // .sslSocketFactory(sslSocketFactory, trustManager)
                     .hostnameVerifier(new HostnameVerifier() {
+                        @SuppressLint("BadHostnameVerifier")
                         @Override
                         public boolean verify(String hostname, SSLSession session) {
                             return true;
                         }
                     }).build();
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Erreur : " + e);
+        }
+    }
+
+    /**
+     * SSLContext
+     * @param keyManagers
+     * @param trustManagers
+     * @return
+     */
+    private static SSLContext sslContext(KeyManager[] keyManagers, TrustManager[] trustManagers) {
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(keyManagers, trustManagers, null);
+            return sslContext;
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IllegalStateException("Couldn't init TLS context", e);
         }
     }
 
     /**
      * getInstance
+     *
      * @return Instance
      */
     public static DomoOkhttp getInstance() {
@@ -77,6 +103,7 @@ public class DomoOkhttp {
 
     /**
      * Mise à jour du builder avec le timeOut
+     *
      * @param connectTimeout - TimeOut de connexion
      * @return client OkHttp
      */
@@ -89,7 +116,7 @@ public class DomoOkhttp {
         } catch (OutOfMemoryError outOfMemoryError) {
             Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
         } catch (Exception e) {
-            Log.e(TAG,"Erreur " + e);
+            Log.e(TAG, "Erreur " + e);
         }
         return client;
     }

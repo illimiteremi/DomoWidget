@@ -48,6 +48,7 @@ public class WidgetPushFragment extends Fragment {
     private Context               context;                  // Context
 
     private int                   newIdWidget;              // ID du widget à créer
+
     private boolean               isConfigured;             // Widget configuré
 
     private AutoCompleteTextView  name;                     // Nom du Widget

@@ -144,8 +144,9 @@ public class DomoUtils {
                 // Android 8.0 Background Execution Limits
                 ComponentName componentName = context.startForegroundService(serviceIntent);
                 Log.d(TAG, "ComponentName = " + componentName.getClassName());
+            } else {
+                context.startService(serviceIntent);
             }
-            context.startService(serviceIntent);
         }
     }
 

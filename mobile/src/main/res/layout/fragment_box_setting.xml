@@ -173,7 +173,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:background="#ffffff"
-                            android:max="10"
+                            android:max="20"
                             android:progress="1" />
 
                         <TextView

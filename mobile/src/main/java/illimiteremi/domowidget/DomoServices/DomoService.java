@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,12 +20,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoGeneralSetting.ManageActivity;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetLocation.LocationWidget;
@@ -32,10 +36,13 @@ import illimiteremi.domowidget.R;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.LOCATION;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.UPDATE_WIDGET_LOCATION_CHANGED;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.VOCAL;
 
 public class DomoService extends Service {
 
     private static final String             TAG = "[DOMO_SERVICE]";
+
+    private static final int NOTIFICATION_ID = 101;
 
     private Context                         context;
     private BroadcastReceiver               mReceiver;
@@ -102,30 +109,20 @@ public class DomoService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         if (startId == 1) {
             Log.d(TAG, "Démarrage du service DOMO-WIDGET...");
-            if (Build.VERSION.SDK_INT >= 26) {
-                // Android 8.0 Background Execution Limits
-                NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                String id = "domoWidget_channel_01";
-                CharSequence name = "Service DomoWidget";
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-                NotificationChannel mChannel = new NotificationChannel(id, name, importance);
-                mChannel.setShowBadge(true);
-                mNotificationManager.createNotificationChannel(mChannel);
-                Notification notification = new Notification.Builder(this, id)
-                        .setSmallIcon(R.drawable.ic_domo_notification)
-                        .setContentTitle(getString(R.string.domo_service))
-                        .build();
-                startForeground(1, notification);
-            }
         } else {
             Log.d(TAG, "Redémarrage du service DOMO-WIDGET...");
         }
         // Creation du receiver de maj des widgets
         createBroadcastReceiver();
-        createLocation();
+
+        // Activation du service GPS
+        boolean gpsService  = !DomoUtils.getAllObjet(context, LOCATION).isEmpty();
+        Log.d(TAG, "Activation du service GPS : " + gpsService);
+        if (gpsService) {
+            createLocation();
+        }
         return START_STICKY;
     }
 
@@ -133,6 +130,35 @@ public class DomoService extends Service {
     public void onCreate() {
         this.context = getApplicationContext();
         super.onCreate();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Android 8.0 Background Execution Limits
+            try {
+                String id = "domoWidget_channel_01";
+                CharSequence name = "Service DomoWidget";
+                NotificationChannel mChannel = new NotificationChannel(id, name, NotificationManager.IMPORTANCE_NONE);
+                mChannel.setShowBadge(false);
+                mChannel.setLightColor(Color.GREEN);
+                mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+
+                Intent notificationIntent = new Intent(context, ManageActivity.class);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                PendingIntent pIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, id)
+                        .setSmallIcon(R.drawable.ic_domo_notification)
+                        .setContentTitle(getString(R.string.domo_service))
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setCategory(Notification.CATEGORY_SERVICE)
+                        .addAction(R.drawable.arcade_red_push, "ouvrir",pIntent);
+                Notification notification = mBuilder.build();
+                startForeground(NOTIFICATION_ID, notification);
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur : " + e);
+            }
+        }
+
     }
 
     /**
@@ -168,7 +194,6 @@ public class DomoService extends Service {
                                     ListenerGPS timeListener = new ListenerGPS(widget);
                                     listenerGPSs.add(timeListener);
                                     mLocationManager.requestLocationUpdates(widget.getDomoProvider(), TimeUnit.MINUTES.toMillis(widget.getDomoTimeOut()), 0, timeListener);
-
                                 }
 
                                 // ListenerGPS - DISTANCE
@@ -191,6 +216,7 @@ public class DomoService extends Service {
         }
     }
 
+
     /**
      * Création du BroadcastReceiver de Mise à jour du Widget
      */
@@ -203,15 +229,20 @@ public class DomoService extends Service {
                 String action = intent.getAction();
                 Log.d(TAG, "Action = " + action);
 
+                Boolean voiceService = !DomoUtils.getAllObjet(context, VOCAL).isEmpty();
+                Log.d(TAG, "Activation du service vocal : " + voiceService);
+
                 if (!isInitialStickyBroadcast()) {
                     switch (action) {
                         case Intent.ACTION_SCREEN_ON :
-                            DomoUtils.startVoiceService(context, false);
-                        case "android.net.conn.CONNECTIVITY_CHANGE":
+                            if (voiceService) {
+                               DomoUtils.startVoiceService(context, false);
+                            }
                             DomoUtils.updateAllWidget(context);
-                            break;
                         case Intent.ACTION_SCREEN_OFF:
-                            DomoUtils.stopVoiceService(context);
+                            if (voiceService) {
+                                DomoUtils.stopVoiceService(context);
+                            }
                             break;
                         default:
                             // NOTHING
@@ -222,7 +253,6 @@ public class DomoService extends Service {
 
         // Construction du receiver
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mReceiver, intentFilter);
@@ -238,23 +268,24 @@ public class DomoService extends Service {
     public void onDestroy() {
         // Log.d(TAG, "Service OnDestroy");
         // Log.d(TAG, "Nombre de Listener GPS à détruire : " + listenerGPSs.size());
-        if (listenerGPSs.size() != 0) {
-            for (ListenerGPS listenerGPS : listenerGPSs) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Problème de permission ACCESS_FINE_LOCATION !");
-                    return;
-                } else {
-                    mLocationManager.removeUpdates(listenerGPS);
+        if (listenerGPSs != null) {
+            if (listenerGPSs.size() != 0) {
+                for (ListenerGPS listenerGPS : listenerGPSs) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        Log.d(TAG, "Problème de permission ACCESS_FINE_LOCATION !");
+                        return;
+                    } else {
+                        mLocationManager.removeUpdates(listenerGPS);
+                    }
                 }
             }
         }
+
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-
         stopForeground(true);
-
         super.onDestroy();
     }
 }

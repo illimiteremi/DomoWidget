@@ -139,7 +139,6 @@ public class DomoUtils {
         // Démarrage du service
         if (!isServiceRunning(context, DomoService.class) || restart) {
             Intent serviceIntent = new Intent(context, DomoService.class);
-            context.stopService(serviceIntent);
             if (Build.VERSION.SDK_INT >= 26) {
                 // Android 8.0 Background Execution Limits
                 ComponentName componentName = context.startForegroundService(serviceIntent);

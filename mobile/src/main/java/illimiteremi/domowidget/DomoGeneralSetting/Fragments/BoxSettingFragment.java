@@ -31,6 +31,7 @@ import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
@@ -151,15 +152,13 @@ public class BoxSettingFragment extends Fragment {
                 // Create JOB
                 Job widgetJob = dispatcher.newJobBuilder()
                         .setService(FireBaseJobService.class)
+                        .setTag("DOMO_WIDGET")
+                        .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
                         .setExtras(bundle)
                         .setTag("[UPDATE_ALL_WIDGET]")
                         .setRecurring(true)
                         .setLifetime(Lifetime.FOREVER)
                         .setTrigger(Trigger.executionWindow((int) timeRepeat, (int) timeRepeat))
-                        .setConstraints(
-                                // only run when the device is charging
-                                Constraint.DEVICE_CHARGING
-                        )
                         .build();
                 // Dispatch Job
                 Log.d(TAG, "Création du Job de rafraichissement des Widgets : " + timeRepeat + " sec");

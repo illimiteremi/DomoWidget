@@ -70,9 +70,8 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manage_activity);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         Context context = getApplicationContext();
 
         // Init du drawer
@@ -88,7 +87,7 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
         domoBase.close();
 
         // Information de l'intent de création d'un widget
-        String intentAction = getIntent().getAction();
+        String intentAction = getIntent().getAction() == null ? "" : getIntent().getAction();
         Bundle extras       = getIntent().getExtras();
         Fragment myFragment = null;
 

@@ -6,29 +6,36 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="3"
-        android:paddingTop="20dp">
+        android:layout_weight="3">
 
-        <GridView
-            android:id="@+id/gridView"
+        <FrameLayout
+            android:id="@+id/frameGrid"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="25dp"
-            android:background="@drawable/bg_seekbar_widget"
-            android:columnWidth="20dp"
-            android:numColumns="40"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:scrollbars="none"
-            android:visibility="visible" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/widgetImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/light_on"
-            android:scaleType="fitCenter" />
+            <GridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="25dp"
+                android:background="@drawable/bg_seekbar_widget"
+                android:columnWidth="20dp"
+                android:numColumns="40"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:scrollbars="none"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/widgetImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/light_on"
+                android:scaleType="fitCenter" />
+
+        </FrameLayout>
 
     </FrameLayout>
 

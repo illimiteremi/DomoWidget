@@ -277,7 +277,7 @@ public class ImportWidget {
                     DomoUtils.insertObjet(context, multiWidget);
                     JSONArray ressArray = explrObject.getJSONArray(MULTI_RESS);
                     for (int x = 0; x < ressArray.length(); x++) {
-                        JSONObject explrRessObject = ressArray.getJSONObject(i);
+                        JSONObject explrRessObject = ressArray.getJSONObject(x);
                         MultiWidgetRess multiWidgetRess = new MultiWidgetRess(-(explrRessObject.getInt(COL_ID_WIDGET)));
                         multiWidgetRess.setDomoName(explrRessObject.getString(COL_NAME));
                         multiWidgetRess.setDomoAction(explrRessObject.getString(COL_ACTION));

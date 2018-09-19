@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="illimiteremi.domowidget">
+          package="illimiteremi.domowidget"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,8 +14,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature
-        android:name="android.hardware.type.watch"
-        android:required="false" />
+        android:name="android.hardware.type.watch" />
     <!-- required="false" => embarque dans l'apk mobile -->
     <!-- required="true" => apk autonome -->
 
@@ -24,6 +24,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
+
+        <meta-data
+            tools:replace="android:value"
+            android:name="android.support.VERSION"
+            android:value="26.0.2" />
 
         <activity
             android:name=".wear.WearActivity"

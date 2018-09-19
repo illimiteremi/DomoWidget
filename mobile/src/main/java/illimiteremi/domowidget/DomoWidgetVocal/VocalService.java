@@ -4,6 +4,8 @@ import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -135,30 +137,23 @@ public class VocalService extends Service {
         // Check si KeyPhrase
         if (level != 0) {
             Log.d(TAG, "Vocal Service - Mot Clef = " + keyPhrase + " - Seuil = " + (1 * Math.pow(10,-(level))));
-            new AsyncTask<Void, Void, Exception>() {
+            HandlerThread handlerThread = new HandlerThread(TAG);
+            handlerThread.start();
+            Handler handler = new Handler(handlerThread.getLooper());
+            handler.post(new Runnable() {
                 @Override
-                protected Exception doInBackground(Void... params) {
+                public void run() {
                     try {
                         Assets assets = new Assets(getApplicationContext());
                         File assetDir = assets.syncAssets();
                         setupRecognizer(assetDir, keyPhrase);
-                    } catch (IOException e) {
-                        Log.e(TAG, "Erreur : " + e);
-                        return e;
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Exception result) {
-                    if (result != null) {
-                        Log.e(TAG, "Failed to init recognizer " + result);
-                    } else {
                         recognizer.stop();
                         recognizer.startListening(KWS_SEARCH);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Erreur : " + e);
                     }
                 }
-            }.execute();
+            });
         }
     }
 
@@ -167,9 +162,13 @@ public class VocalService extends Service {
         super.onDestroy();
         //Log.d(TAG,"onDestroy");
         if (recognizer != null) {
-            recognizer.cancel();
-            recognizer.shutdown();
-            recognizer.removeListener(recognitionListener);
+            try {
+                recognizer.cancel();
+                recognizer.shutdown();
+                recognizer.removeListener(recognitionListener);
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur : " + e.getMessage());
+            }
         }
     }
 

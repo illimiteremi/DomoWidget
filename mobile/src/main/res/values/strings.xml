@@ -17,7 +17,7 @@
     <string name="key_error">Clé API non valide (ou vide)</string>
     <string name="crash_folder">DomoWidget_Logs</string>
 
-    <string name="domo_service">Le service est actuellement démarré...</string>
+    <string name="domo_service">DomoWidget est actuellement démarré...</string>
 
     <string name="widget_list">Liste des Widgets</string>
     <string name="no_widget">Aucun widget</string>

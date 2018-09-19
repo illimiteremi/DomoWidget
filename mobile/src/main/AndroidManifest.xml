@@ -48,6 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".DomoUtils.FileExplorerActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -69,6 +70,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/domo_widget_toggle_info" />
         </receiver>
+
         <receiver
             android:name=".DomoWidgetState.WidgetStateProvider"
             android:exported="false"
@@ -175,9 +177,7 @@
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver
-            android:name=".DomoReceiver"
-            android:enabled="true"
-            android:exported="true" >
+            android:name=".DomoReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />

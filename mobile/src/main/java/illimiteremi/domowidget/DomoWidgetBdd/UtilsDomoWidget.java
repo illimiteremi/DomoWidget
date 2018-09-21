@@ -7,20 +7,26 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.TIME_OUT;
  */
 public class UtilsDomoWidget {
 
-    public static final int    VERSION_BDD                 = 34;
-    public static final String NOM_BDD                     = "domo_widget.db";
-    public static final String TABLE_TOOGLE_WIDGET         = "table_toogle_widget";
-    public static final String TABLE_STATE_WIDGET          = "table_state_widget";
-    public static final String TABLE_RESS_WIDGET           = "table_ressource_widget";
-    public static final String TABLE_PUSH_WIDGET           = "table_push_widget";
-    public static final String TABLE_LOCATION_WIDGET       = "table_location_widget";
-    public static final String TABLE_MUTLI_WIDGET          = "table_multi_widget";
-    public static final String TABLE_MUTLI_RESSOURCE       = "table_multi_widget_ress";
-    public static final String TABLE_SEEKBAR_WIDGET        = "table_domo_seekbar";
-    public static final String TABLE_GLOBAL_SETTING        = "table_global_setting";
-    public static final String TABLE_VOCAL_WIDGET          = "table_vocal_widget";
-    public static final String TABLE_DOMO_WEAR             = "table_domo_wear";
-    public static final String TABLE_WEBCAM_WIDGET         = "table_webcam_widget";
+    public static final int    VERSION_BDD                  = 35;
+    public static final String NOM_BDD                      = "domo_widget.db";
+    public static final String TABLE_TOOGLE_WIDGET          = "table_toogle_widget";
+    public static final String TABLE_STATE_WIDGET           = "table_state_widget";
+    public static final String TABLE_RESS_WIDGET            = "table_ressource_widget";
+    public static final String TABLE_PUSH_WIDGET            = "table_push_widget";
+    public static final String TABLE_LOCATION_WIDGET        = "table_location_widget";
+    public static final String TABLE_MUTLI_WIDGET           = "table_multi_widget";
+    public static final String TABLE_MUTLI_RESSOURCE        = "table_multi_widget_ress";
+    public static final String TABLE_SEEKBAR_WIDGET         = "table_domo_seekbar";
+    public static final String TABLE_GLOBAL_SETTING         = "table_global_setting";
+    public static final String TABLE_VOCAL_WIDGET           = "table_vocal_widget";
+    public static final String TABLE_DOMO_WEAR              = "table_domo_wear";
+    public static final String TABLE_WEBCAM_WIDGET          = "table_webcam_widget";
+    public static final String TABLE_JEEDOM_OBJET           = "table_jeedom_objet";
+    public static final String TABLE_JEEDOM_CMD             = "table_jeedom_action";
+
+    public static final String COL_ID_CMD                   = "ID_CMD";
+    public static final String COL_ID_OBJET                 = "ID_OBJET";
+    public static final String COL_TYPE                     = "TYPE";
 
     public static final String COL_ID                       = "ID";
     public static final String COL_ID_WIDGET                = "ID_WIDGET";
@@ -204,4 +210,17 @@ public class UtilsDomoWidget {
             + COL_NAME           + " TEXT, "
             + COL_URL            + " TEXT, "
             + COL_PORT           + " TEXT);";
+
+    public static final String CREATE_JEEDOM_OBJET = "CREATE TABLE IF NOT EXISTS " + TABLE_JEEDOM_OBJET + " ("
+            + COL_ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COL_ID_OBJET       + " INTEGER NOT NULL, "
+            + COL_NAME           + " TEXT);";
+
+    public static final String CREATE_JEEDOM_CMD = "CREATE TABLE IF NOT EXISTS " + TABLE_JEEDOM_CMD + " ("
+            + COL_ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COL_ID_OBJET       + " INTEGER NOT NULL, "
+            + COL_NAME           + " TEXT, "
+            + COL_TYPE           + " TEXT, "
+            + COL_ID_CMD         + " INTEGER NOT NULL);";
+
 }

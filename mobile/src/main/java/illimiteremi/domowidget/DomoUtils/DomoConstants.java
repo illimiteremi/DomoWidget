@@ -142,13 +142,14 @@ public class DomoConstants {
     }
 
     // INTENT SERVICE
-    public static final String REQUEST        = "REQUEST";
-    public static final String REQUEST_BOX    = "REQUEST_BOX";
-    public static final String REQUEST_GEOLOC = "REQUEST_GEOLOC";
-    public static final String BOX_PING       = "BOX_PING";
-    public static final String BOX_MESSAGE    = "BOX_MESSAGE";
-    public static final String REQUEST_WEBCAM = "WEBCAM";
-    public static final String WIDGET_VALUE   = "WIDGET_VALUE";
+    public static final String REQUEST         = "REQUEST";
+    public static final String REQUEST_BOX     = "REQUEST_BOX";
+    public static final String REQUEST_JSONRPC = "JSONRPC";
+    public static final String REQUEST_GEOLOC  = "REQUEST_GEOLOC";
+    public static final String BOX_PING        = "BOX_PING";
+    public static final String BOX_MESSAGE     = "BOX_MESSAGE";
+    public static final String REQUEST_WEBCAM  = "WEBCAM";
+    public static final String WIDGET_VALUE    = "WIDGET_VALUE";
 
     // STATE
     public static final String  UPDATE_ALL_WIDGET_STATE    = "android.appwidget.action.STATE_WIDGET_UPDATE_ALL";

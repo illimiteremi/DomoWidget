@@ -47,6 +47,8 @@ public class DomoBaseSQLite extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_WEAR_BDD);
         sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_SEEKBAR_BDD);
         sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_WEBCAM_BDD);
+        sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_JEEDOM_OBJET);
+        sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_JEEDOM_CMD);
         addRessource(sqLiteDatabase);
         Log.d(TAG, "Fin Création BDD");
     }
@@ -350,6 +352,16 @@ public class DomoBaseSQLite extends SQLiteOpenHelper {
 
                 sqLiteDatabase.execSQL("ALTER TABLE " + UtilsDomoWidget.TABLE_GLOBAL_SETTING + " ADD COLUMN "
                         + UtilsDomoWidget.COL_TEXT_SIZE + " INTEGER DEFAULT 0");
+            } catch (SQLiteException e) {
+                Log.e(TAG, "SQLite erreur " + e);
+            }
+        }
+
+        if (newVersion >=35) {
+            Log.d(TAG, "Mise à jour version 35 - JSONRPC");
+            try {
+                sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_JEEDOM_OBJET);
+                sqLiteDatabase.execSQL(UtilsDomoWidget.CREATE_JEEDOM_CMD);
             } catch (SQLiteException e) {
                 Log.e(TAG, "SQLite erreur " + e);
             }

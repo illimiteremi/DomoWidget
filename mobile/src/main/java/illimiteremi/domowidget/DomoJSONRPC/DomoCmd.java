@@ -2,9 +2,19 @@ package illimiteremi.domowidget.DomoJSONRPC;
 
 public class DomoCmd {
 
-    private Integer id;                                          // Identifiant SQL
+    private Integer id;                                          // Identifiant sql
     private Integer idObjet;                                     // Identifiant de l'objet jeedom
-    private String  objetName  = "";                             // Nom de l'objet
+    private String  cmdName;                                     // Nom de la commande
+    private String  type;                                        // Type de la commande ACTION / INFO
+    private Integer idCmd;                                       // Identifiant de la commande
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getIdObjet() {
         return idObjet;
@@ -14,11 +24,27 @@ public class DomoCmd {
         this.idObjet = idObjet;
     }
 
-    public String getObjetName() {
-        return objetName;
+    public String getCmdName() {
+        return cmdName;
     }
 
-    public void setObjetName(String objetName) {
-        this.objetName = objetName;
+    public void setCmdName(String cmdName) {
+        this.cmdName = cmdName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getIdCmd() {
+        return idCmd;
+    }
+
+    public void setIdCmd(Integer idCmd) {
+        this.idCmd = idCmd;
     }
 }

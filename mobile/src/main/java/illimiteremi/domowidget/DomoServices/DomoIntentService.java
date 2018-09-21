@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -27,8 +28,12 @@ import java.io.OutputStream;
 import java.util.List;
 
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
+import illimiteremi.domowidget.DomoJSONRPC.DomoObjet;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
+import illimiteremi.domowidget.DomoUtils.DomoUtils;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -50,7 +55,9 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_MATCH;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PING_ACTION;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_GEOLOC;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_OBJET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_WEBCAM;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.WIDGET_VALUE;
 
@@ -157,6 +164,73 @@ public class DomoIntentService extends IntentService {
         }
     }
 
+    // OkHttpBoxCallback (callback utilisé pour jsonrpc)
+    private class OkHttpJsonRpcCallback implements Callback {
+
+        String objetOrCmd;
+
+        public OkHttpJsonRpcCallback(String objetOrCmd) {
+            this.objetOrCmd = objetOrCmd;
+        }
+
+        @Override
+        public void onFailure(Call call, IOException e) {
+            Log.e(TAG, "onFailure : " + e);
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+            try {
+                String jsonData = response.body().string();
+                JSONObject jsonObject = new JSONObject(jsonData);
+                JSONArray result = jsonObject.getJSONArray("result");
+                Log.d(TAG, objetOrCmd + " - Size : " + result.length());
+                DomoJsonRPC domoJsonRPC = new DomoJsonRPC(getApplicationContext());
+
+                switch (objetOrCmd) {
+                    case REQUEST_OBJET :
+                        domoJsonRPC.open();
+                        domoJsonRPC.deleteData(REQUEST_OBJET);
+                        for (int i = 0; i < result.length(); i++) {
+                            JSONObject row = result.getJSONObject(i);
+                            Log.d(TAG, "onResponse: " + row.toString());
+                            int id = row.getInt("id");
+                            String name = row.getString("name");
+                            DomoObjet objet = new DomoObjet();
+                            objet.setIdObjet(id);
+                            objet.setObjetName(name);
+                            domoJsonRPC.insertObjet(objet);
+                        }
+                        domoJsonRPC.close();
+                        break;
+                    case REQUEST_CMD:
+                        domoJsonRPC.open();
+                        domoJsonRPC.deleteData(REQUEST_CMD);
+                        for (int i = 0; i < result.length(); i++) {
+                            JSONObject row = result.getJSONObject(i);
+                            int id = row.getInt("id");
+                            String name = row.getString("name");
+                            String type = row.getString("type");
+                            String eqType = row.getString("eqType");
+                            int objId = row.getInt("eqLogic_id");
+                            DomoCmd cmd = new DomoCmd();
+                            cmd.setIdObjet(objId);
+                            cmd.setIdCmd(id);
+                            cmd.setCmdName(eqType + " - " + name);
+                            cmd.setType(type);
+                            domoJsonRPC.insertCmd(cmd);
+                        }
+                        domoJsonRPC.close();
+                        break;
+                    }
+
+            } catch (Exception e) {
+                Log.e(TAG, "Erreur : " + e.getMessage());
+                //sendTestResponseToProvider(false, e.getMessage());
+            }
+        }
+    }
+
     // OkHttpWebCamCallback (callback utilisé pour le téléchargement de l'image webcam)
     private class OkHttpWebCamCallback implements Callback {
 
@@ -248,6 +322,12 @@ public class DomoIntentService extends IntentService {
                         case REQUEST_WEBCAM :
                             getWebCamPictureFromToJeedom(boxSetting, widget);
                             break;
+                        case REQUEST_OBJET :
+                            getAllJeedomObjet(boxSetting);
+                            break;
+                        case REQUEST_CMD :
+                            getAllJeedomCmd(boxSetting);
+                            break;
                         default:
                             // NOTHING
                     }
@@ -257,6 +337,97 @@ public class DomoIntentService extends IntentService {
             } catch (Exception e) {
                 Log.e(TAG, "Erreur -> IntentService : " + e);
             }
+        }
+    }
+
+    /**
+     * getAllCmd
+     * @param boxSetting
+     */
+    public void getAllJeedomCmd(final BoxSetting boxSetting) {
+
+        // TimeOut
+        Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer requestTimeOut;
+
+        // Création de la requete http suivant le type de connexion
+        Request request;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject param = new JSONObject();
+            param.put("apikey",boxSetting.getBoxKey());
+            jsonObject.put("jsonrpc", "2.0");
+            jsonObject.put("id"     , "1");
+            jsonObject.put("method" , "cmd::all");
+            jsonObject.put("params", param);
+            MediaType JSON   = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            Log.d(TAG,JSON.toString());
+            if (checkWifi()) {
+                // Url Interne (en Wifi)
+                requestTimeOut = wifiTimeOut;
+                request = new Request.Builder().url(boxSetting.getBoxUrlInterne() + JEEDOM_API_URL).post(body).build();
+            } else {
+                // Url Externe
+                requestTimeOut = mobileTimeOut;
+                request = new Request.Builder().url(boxSetting.getBoxUrlExterne() + JEEDOM_API_URL).post(body).build();
+            }
+            // Execution de la requete
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpJsonRpcCallback(REQUEST_CMD));
+        } catch (OutOfMemoryError outOfMemoryError) {
+            Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
+            sendTestResponseToProvider(false, "OutOfMemoryError");
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur : " + e.getMessage());
+            sendTestResponseToProvider(false, e.getMessage());
+        }
+    }
+
+    /**
+     * getAllObjet
+     * @param boxSetting
+     */
+    public void getAllJeedomObjet(final BoxSetting boxSetting) {
+
+        // TimeOut
+        Integer wifiTimeOut   = boxSetting.getBoxTimeOut() == 0 ? DomoConstants.WIFI_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer mobileTimeOut = boxSetting.getBoxTimeOut() == 0 ? MOBILE_TIME_OUT : boxSetting.getBoxTimeOut();
+        Integer requestTimeOut;
+
+        // Création de la requete http suivant le type de connexion
+        Request request;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject param = new JSONObject();
+            param.put("apikey",boxSetting.getBoxKey());
+            jsonObject.put("jsonrpc", "2.0");
+            jsonObject.put("id"     , "1");
+            jsonObject.put("method" , "eqLogic::all");
+            jsonObject.put("params", param);
+            MediaType JSON   = MediaType.parse("application/json; charset=utf-8");
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            if (checkWifi()) {
+                // Url Interne (en Wifi)
+                requestTimeOut = wifiTimeOut;
+                request = new Request.Builder().url(boxSetting.getBoxUrlInterne() + JEEDOM_API_URL).post(body).build();
+            } else {
+                // Url Externe
+                requestTimeOut = mobileTimeOut;
+                request = new Request.Builder().url(boxSetting.getBoxUrlExterne() + JEEDOM_API_URL).post(body).build();
+            }
+            // Execution de la requete
+            okHttpClient = domoOkhttp.setBuilder(requestTimeOut);
+            okHttpClient.newCall(request).enqueue(new OkHttpJsonRpcCallback(REQUEST_OBJET));
+        } catch (OutOfMemoryError outOfMemoryError) {
+            Log.e(TAG, "Erreur Mémoire : " + outOfMemoryError.getMessage());
+            sendTestResponseToProvider(false, "OutOfMemoryError");
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur : " + e.getMessage());
+            sendTestResponseToProvider(false, e.getMessage());
         }
     }
 
@@ -281,6 +452,7 @@ public class DomoIntentService extends IntentService {
             MediaType JSON   = MediaType.parse("application/json; charset=utf-8");
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
+            Log.d(TAG,JSON.toString());
             if (checkWifi()) {
                 // Url Interne (en Wifi)
                 requestTimeOut = wifiTimeOut;

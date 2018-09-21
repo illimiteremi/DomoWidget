@@ -64,7 +64,9 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PUSH;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_GEOLOC;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_OBJET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_WEBCAM;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.SEEKBAR;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.STATE;
@@ -1096,6 +1098,39 @@ public class DomoUtils {
             Log.e(TAG, "Erreur " + e);
         }
     }
+
+    /**
+     * getAllJeedomObjet
+     * @param context
+     * @param box
+     */
+    public static void getAllJeedomObjet(Context context, BoxSetting box){
+        try {
+            Intent msgIntent = new Intent(context, DomoIntentService.class);
+            msgIntent.setAction(REQUEST_OBJET);
+            msgIntent.putExtra("BOX", box);
+            context.startService(msgIntent);
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur " + e);
+        }
+    }
+
+    /**
+     * getAllJeedomCmd
+     * @param context
+     * @param box
+     */
+    public static void getAllJeedomCmd(Context context, BoxSetting box){
+        try {
+            Intent msgIntent = new Intent(context, DomoIntentService.class);
+            msgIntent.setAction(REQUEST_CMD);
+            msgIntent.putExtra("BOX", box);
+            context.startService(msgIntent);
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur " + e);
+        }
+    }
+
 }
 
 

@@ -218,7 +218,7 @@ public class UtilsDomoWidget {
 
     public static final String CREATE_JEEDOM_CMD = "CREATE TABLE IF NOT EXISTS " + TABLE_JEEDOM_CMD + " ("
             + COL_ID             + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COL_ID_OBJET       + " INTEGER NOT NULL, "
+            + COL_ID_OBJET       + " INTEGER NOT NULL CONSTRAINT fw_jeedom_objet REFERENCES " + TABLE_JEEDOM_OBJET + ", "
             + COL_NAME           + " TEXT, "
             + COL_TYPE           + " TEXT, "
             + COL_ID_CMD         + " INTEGER NOT NULL);";

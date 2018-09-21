@@ -144,7 +144,8 @@ public class DomoConstants {
     // INTENT SERVICE
     public static final String REQUEST         = "REQUEST";
     public static final String REQUEST_BOX     = "REQUEST_BOX";
-    public static final String REQUEST_JSONRPC = "JSONRPC";
+    public static final String REQUEST_OBJET   = "JSONRPC_OBJET";
+    public static final String REQUEST_CMD     = "JSONRPC_CMD";
     public static final String REQUEST_GEOLOC  = "REQUEST_GEOLOC";
     public static final String BOX_PING        = "BOX_PING";
     public static final String BOX_MESSAGE     = "BOX_MESSAGE";

@@ -34,9 +34,14 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 
+import java.util.ArrayList;
+
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
+import illimiteremi.domowidget.DomoJSONRPC.DomoObjet;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import illimiteremi.domowidget.FireBaseJobDispatcher.FireBaseJobService;
 import illimiteremi.domowidget.R;
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
@@ -179,6 +184,23 @@ public class BoxSettingFragment extends Fragment {
         this.context = getContext();
         // Maj du titre
         getActivity().setTitle(getResources().getString(R.string.fragment_configuration));
+
+        // TEST
+        DomoJsonRPC domoJsonRPC = new DomoJsonRPC(context);
+        domoJsonRPC.open();
+        ArrayList<DomoObjet> jeedomObjets = domoJsonRPC.getAllObjet();
+        if (jeedomObjets != null) {
+            for (DomoObjet domoObjet: jeedomObjets) {
+                Log.d(TAG, domoObjet.getObjetName());
+                ArrayList<DomoCmd> jeedomCmds = domoJsonRPC.getCmdByObjet(domoObjet, "info");
+                if (jeedomCmds != null) {
+                    for (DomoCmd domoCmd: jeedomCmds) {
+                        Log.d(TAG,  "- " + domoCmd.getCmdName() + " - " + domoCmd.getIdCmd());
+                    }
+                }
+            }
+        }
+        domoJsonRPC.close();
     }
 
     @Override
@@ -453,6 +475,11 @@ public class BoxSettingFragment extends Fragment {
 
             // Envoi de requete à la box Domotique
             DomoUtils.pingRequestToJeedom(context, boxSetting);
+
+            // Recuperation des data Jeedom
+            DomoUtils.getAllJeedomObjet(context, boxSetting);
+            DomoUtils.getAllJeedomCmd(context, boxSetting);
+
             isNew = false;
             return true;
         }

@@ -133,7 +133,7 @@
     <string name="export_result">Résultat</string>
     <string name="advanced_setting">Paramètres avancés</string>
 
-        <string name="import_backup">Importer</string>
+    <string name="import_backup">Importer</string>
     <string name="import_file">Contenu du fichier</string>
     <string name="file_ok">Le fichier est valide !</string>
     <string name="file_ko">Le fichier n\'est pas valide !</string>
@@ -142,7 +142,7 @@
     <string name="export_loading">Exportation en cours…</string>
     <string name="bdd_update">Chargerment en cous…</string>
 
-    <string name="paypal">Un petit coup de main ?</string>
+    <string name="paypal">Faire un don</string>
     <string name="forum">Forum Jeedom</string>
     <string name="tutoriel">DomoWidget</string>
 

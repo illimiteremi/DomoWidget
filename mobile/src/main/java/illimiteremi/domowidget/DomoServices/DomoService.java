@@ -19,6 +19,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -101,12 +102,6 @@ public class DomoService extends Service {
         }
     }
 
-    /**
-     * Constructeur
-     */
-    public DomoService() {
-    }
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (startId == 1) {
@@ -128,8 +123,8 @@ public class DomoService extends Service {
 
     @Override
     public void onCreate() {
-        this.context = getApplicationContext();
         super.onCreate();
+        this.context = getApplicationContext();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Android 8.0 Background Execution Limits
@@ -141,10 +136,12 @@ public class DomoService extends Service {
                 mChannel.setLightColor(Color.GREEN);
                 mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
+                NotificationManager service  = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                service.createNotificationChannel(mChannel);
+
                 Intent notificationIntent = new Intent(context, ManageActivity.class);
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, id)
                         .setSmallIcon(R.drawable.ic_domo_notification)
@@ -288,4 +285,5 @@ public class DomoService extends Service {
         stopForeground(true);
         super.onDestroy();
     }
+
 }

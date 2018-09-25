@@ -42,6 +42,8 @@ public class DomoConstants {
     public static final String MULTI_RESS  = "MultiWidgetRess";
     public static final String WEBCAM      = "WebCamWidget";
     public static final String ICON        = "IconSetting";
+    public static final String EQUIPEMENT  = "Equipements";
+    public static final String CMD         = "Commandes";
 
     public static final String ERROR             = "ERROR";
     public static final String MATCH             = "1";

@@ -21,7 +21,7 @@ public class DomoReceiver extends BroadcastReceiver {
        // <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
        Log.d(TAG, "Action = " + intent.getAction());
 
-        // Démarrage du service GPS et update widget Boot et changement position GPS
-        DomoUtils.startService(context, true);
+       // Démarrage du service GPS et update widget Boot et changement position GPS
+       DomoUtils.startService(context, true);
     }
 }

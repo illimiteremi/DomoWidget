@@ -10,7 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
-import illimiteremi.domowidget.DomoJSONRPC.DomoObjet;
+import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_OBJET;
@@ -23,11 +23,9 @@ public class DomoJsonRPC {
 
     private SQLiteDatabase bdd;
     private final DomoBaseSQLite domoBaseSQLite;
-    private final Context context;
 
     public DomoJsonRPC(Context context){
         // On créer la BDD et sa table
-        this.context = context;
         domoBaseSQLite = new DomoBaseSQLite(context, UtilsDomoWidget.NOM_BDD, null, UtilsDomoWidget.VERSION_BDD);
     }
 
@@ -50,7 +48,7 @@ public class DomoJsonRPC {
      * @param objet
      * @return
      */
-    public long insertObjet(DomoObjet objet){
+    public long insertObjet(DomoEquipement objet){
         // Création d'un ContentValues
         ContentValues values = new ContentValues();
         values.put(UtilsDomoWidget.COL_NAME, objet.getObjetName());
@@ -90,9 +88,9 @@ public class DomoJsonRPC {
      * getAllCmd
      * @return
      */
-    public ArrayList<DomoObjet> getAllObjet(){
+    public ArrayList<DomoEquipement> getAllObjet(){
         try {
-            ArrayList<DomoObjet> listDomoObjet= new ArrayList<>();
+            ArrayList<DomoEquipement> listDomoEquipement = new ArrayList<>();
 
             // Récupère dans un Cursor
             Cursor c = bdd.query(TABLE_JEEDOM_OBJET, new String[] {
@@ -105,11 +103,11 @@ public class DomoJsonRPC {
             }
 
             while (c.moveToNext()) {
-                listDomoObjet.add(cursorToDomoObjet(c));
+                listDomoEquipement.add(cursorToDomoObjet(c));
             }
             // On ferme le cursor
             c.close();
-            return listDomoObjet;
+            return listDomoEquipement;
         } catch (Exception e) {
             Log.e(TAG, "Erreur : " + e);
             return null;
@@ -150,10 +148,10 @@ public class DomoJsonRPC {
 
     /**
      * getCmdByObjet
-     * @param domoObjet
+     * @param domoEquipement
      * @return
      */
-    public ArrayList<DomoCmd> getCmdByObjet(DomoObjet domoObjet, String cmdType) {
+    public ArrayList<DomoCmd> getCmdByObjet(DomoEquipement domoEquipement, String cmdType) {
 
         ArrayList<DomoCmd> listDomoCmd= new ArrayList<>();
         // Récupère dans un Cursor
@@ -163,7 +161,7 @@ public class DomoJsonRPC {
                     UtilsDomoWidget.COL_ID_OBJET,
                     UtilsDomoWidget.COL_NAME,
                     UtilsDomoWidget.COL_TYPE,
-                    UtilsDomoWidget.COL_ID_CMD}, UtilsDomoWidget.COL_TYPE + " LIKE \"" + cmdType + "\" AND " + UtilsDomoWidget.COL_ID_OBJET + " LIKE \"" + domoObjet.getIdObjet() +"\"" , null, null, null, null);
+                    UtilsDomoWidget.COL_ID_CMD}, UtilsDomoWidget.COL_TYPE + " LIKE \"" + cmdType + "\" AND " + UtilsDomoWidget.COL_ID_OBJET + " LIKE \"" + domoEquipement.getIdObjet() +"\"" , null, null, null, null);
             // Si aucun élément n'a été retourné dans la requête, on renvoie null
             if (c.getCount() == 0) {
                 Log.e(TAG, "Erreur : Widget non trouvé en BDD !");
@@ -217,9 +215,9 @@ public class DomoJsonRPC {
      * @param c
      * @return
      */
-    private DomoObjet cursorToDomoObjet(Cursor c) {
+    private DomoEquipement cursorToDomoObjet(Cursor c) {
         // On lui affecte toutes les infos grâce aux infos contenues dans le Cursor
-        DomoObjet objet = new DomoObjet();
+        DomoEquipement objet = new DomoEquipement();
         objet.setIdObjet(c.getInt(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_ID_OBJET)));
         objet.setObjetName(c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_NAME)));
         return objet;

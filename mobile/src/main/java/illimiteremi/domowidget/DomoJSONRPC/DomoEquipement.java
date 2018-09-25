@@ -1,6 +1,6 @@
 package illimiteremi.domowidget.DomoJSONRPC;
 
-public class DomoObjet {
+public class DomoEquipement {
 
     private Integer idObjet;                                     // Identifiant de l'objet jeedom
     private String  objetName  = "";                             // Nom de l'objet

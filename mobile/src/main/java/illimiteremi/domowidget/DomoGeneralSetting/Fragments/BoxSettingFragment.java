@@ -26,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
@@ -34,14 +33,11 @@ import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 
-import java.util.ArrayList;
-
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
-import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
-import illimiteremi.domowidget.DomoJSONRPC.DomoObjet;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
-import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import illimiteremi.domowidget.FireBaseJobDispatcher.FireBaseJobService;
 import illimiteremi.domowidget.R;
 import yuku.ambilwarna.colorpicker.AmbilWarnaDialogFragment;
@@ -104,6 +100,23 @@ public class BoxSettingFragment extends Fragment {
             editColor.setBackgroundColor(mColor);
         }
     };
+
+    /**
+     * Listener de selection de couleur
+     */
+    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+
+        @Override
+        public void onCancel(JeedomFindDialogFragment dialogFragment) {
+
+        }
+
+        @Override
+        public void onOk(JeedomFindDialogFragment dialogFragment, String cmd) {
+
+        }
+    };
+
 
     /**
      * Boite de dialogue erreur configuration BOX
@@ -184,23 +197,6 @@ public class BoxSettingFragment extends Fragment {
         this.context = getContext();
         // Maj du titre
         getActivity().setTitle(getResources().getString(R.string.fragment_configuration));
-
-        // TEST
-        DomoJsonRPC domoJsonRPC = new DomoJsonRPC(context);
-        domoJsonRPC.open();
-        ArrayList<DomoObjet> jeedomObjets = domoJsonRPC.getAllObjet();
-        if (jeedomObjets != null) {
-            for (DomoObjet domoObjet: jeedomObjets) {
-                Log.d(TAG, domoObjet.getObjetName());
-                ArrayList<DomoCmd> jeedomCmds = domoJsonRPC.getCmdByObjet(domoObjet, "info");
-                if (jeedomCmds != null) {
-                    for (DomoCmd domoCmd: jeedomCmds) {
-                        Log.d(TAG,  "- " + domoCmd.getCmdName() + " - " + domoCmd.getIdCmd());
-                    }
-                }
-            }
-        }
-        domoJsonRPC.close();
     }
 
     @Override
@@ -475,10 +471,6 @@ public class BoxSettingFragment extends Fragment {
 
             // Envoi de requete à la box Domotique
             DomoUtils.pingRequestToJeedom(context, boxSetting);
-
-            // Recuperation des data Jeedom
-            DomoUtils.getAllJeedomObjet(context, boxSetting);
-            DomoUtils.getAllJeedomCmd(context, boxSetting);
 
             isNew = false;
             return true;

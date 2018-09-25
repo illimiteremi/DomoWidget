@@ -29,10 +29,9 @@ import java.util.List;
 
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
-import illimiteremi.domowidget.DomoJSONRPC.DomoObjet;
+import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
-import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -196,7 +195,7 @@ public class DomoIntentService extends IntentService {
                             Log.d(TAG, "onResponse: " + row.toString());
                             int id = row.getInt("id");
                             String name = row.getString("name");
-                            DomoObjet objet = new DomoObjet();
+                            DomoEquipement objet = new DomoEquipement();
                             objet.setIdObjet(id);
                             objet.setObjetName(name);
                             domoJsonRPC.insertObjet(objet);

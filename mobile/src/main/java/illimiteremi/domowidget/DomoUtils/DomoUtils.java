@@ -17,11 +17,13 @@ import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoGeneralSetting.IconSetting;
+import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.DomoServices.DomoIntentService;
 import illimiteremi.domowidget.DomoServices.DomoSerializableWidget;
 import illimiteremi.domowidget.DomoServices.DomoService;
 import illimiteremi.domowidget.DomoWear.WearSetting;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoBoxBDD;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoWearBDD;
 import illimiteremi.domowidget.DomoWidgetBdd.IconWidgetBDD;
 import illimiteremi.domowidget.DomoWidgetBdd.LocationWidgetBDD;
@@ -53,6 +55,7 @@ import illimiteremi.domowidget.DomoWidgetWebCam.WidgetWebCamProvider;
 import illimiteremi.domowidget.R;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.GEOLOC_URL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.ICON;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.INTENT_NO_DATA;
@@ -141,13 +144,7 @@ public class DomoUtils {
         // Démarrage du service
         if (!isServiceRunning(context, DomoService.class) || restart) {
             Intent serviceIntent = new Intent(context, DomoService.class);
-            if (Build.VERSION.SDK_INT >= 26) {
-                // Android 8.0 Background Execution Limits
-                ComponentName componentName = context.startForegroundService(serviceIntent);
-                Log.d(TAG, "ComponentName = " + componentName.getClassName());
-            } else {
-                context.startService(serviceIntent);
-            }
+            context.startService(serviceIntent);
         }
     }
 
@@ -370,6 +367,17 @@ public class DomoUtils {
                     if (domoWears != null) {
                         for (WearSetting wear : domoWears){
                             objects.add(wear);
+                        }
+                    }
+                    break;
+                case EQUIPEMENT:
+                    DomoJsonRPC domoJsonRPC = new DomoJsonRPC(context);
+                    domoJsonRPC.open();
+                    ArrayList<DomoEquipement> jeedomObjets = domoJsonRPC.getAllObjet();
+                    domoJsonRPC.close();
+                    if (jeedomObjets != null) {
+                        for (DomoEquipement equipement : jeedomObjets){
+                            objects.add(equipement);
                         }
                     }
                     break;
@@ -930,6 +938,9 @@ public class DomoUtils {
             case VOCAL:
                 ArrayList<Object> allVocalObjet = getAllObjet(context, VOCAL);
                 return new WidgetAdapter(context, allVocalObjet);
+            case EQUIPEMENT:
+                ArrayList<Object> allEquipementObjet = getAllObjet(context, EQUIPEMENT);
+                return new WidgetAdapter(context, allEquipementObjet);
         }
         return null;
     }
@@ -998,8 +1009,12 @@ public class DomoUtils {
      * @param activity
      */
     public static void hideKeyboard(Activity activity) {
-        InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+            Log.e(TAG, "hideKeyboard: ", e);
+        }
     }
 
     /**

@@ -87,7 +87,7 @@ public class WidgetToogleFragment extends Fragment {
                 widget.setDomoIdImageOff(idRessource);
                 imageButtonOff.setImageBitmap(bitmapUtils.getBitmapRessource(widget, false));
             }
-            Log.d("[DOMO", "Ressource " + isOn + " - " + idRessource);
+            Log.d(TAG, "Ressource " + isOn + " - " + idRessource);
         }
     };
 
@@ -98,12 +98,13 @@ public class WidgetToogleFragment extends Fragment {
     private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
         @Override
         public void onCancel() {
-
+            Log.d(TAG, "onCancel: ");
         }
 
         @Override
         public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
             cmdTextView.setText(cmd);
+            Log.d(TAG, "onOk: ");
         }
     };
 

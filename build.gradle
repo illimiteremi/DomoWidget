@@ -5,14 +5,14 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha10'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha11'
     }
 }
 
 ext {
     applicationId = "illimiteremi.domowidget"
-    versionCode   = 248
-    versionName   = '6.6.0'
+    versionCode   = 249
+    versionName   = '6.6.1'
 
     // Load keystore
     keystorePropertiesFile = rootProject.file("keystore.properties");

@@ -14,9 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.ArrayList;
 
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
+import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
+import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoGeneralSetting.IconSetting;
+import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
 import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.DomoServices.DomoIntentService;
 import illimiteremi.domowidget.DomoServices.DomoSerializableWidget;
@@ -55,6 +58,7 @@ import illimiteremi.domowidget.DomoWidgetWebCam.WidgetWebCamProvider;
 import illimiteremi.domowidget.R;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.GEOLOC_URL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.ICON;
@@ -940,7 +944,7 @@ public class DomoUtils {
                 return new WidgetAdapter(context, allVocalObjet);
             case EQUIPEMENT:
                 ArrayList<Object> allEquipementObjet = getAllObjet(context, EQUIPEMENT);
-                return new WidgetAdapter(context, allEquipementObjet);
+                return new EquipementAdapter(context, allEquipementObjet);
         }
         return null;
     }

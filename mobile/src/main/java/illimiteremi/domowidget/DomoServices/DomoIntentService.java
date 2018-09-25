@@ -32,6 +32,7 @@ import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
 import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
+import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -222,10 +223,8 @@ public class DomoIntentService extends IntentService {
                         domoJsonRPC.close();
                         break;
                     }
-
             } catch (Exception e) {
                 Log.e(TAG, "Erreur : " + e.getMessage());
-                //sendTestResponseToProvider(false, e.getMessage());
             }
         }
     }

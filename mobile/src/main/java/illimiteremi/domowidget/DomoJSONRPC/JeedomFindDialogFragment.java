@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
 import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
@@ -30,14 +32,13 @@ public class JeedomFindDialogFragment extends DialogFragment {
     private JeedomActionFindListener mListener;
     private View mParentView;
     private Context context;
-    private BoxSetting boxSetting;
 
     private Button               cancelButton;                  // Button annuler
     private Button               okButton;                      // Button choisir
-    private ImageButton          download;                      // Button download
     private Spinner              spinnerEquipements;            // Spinner de la liste des equipements
     private Spinner              spinnerCmd;                    // Spinner de la liste des commandes
     private AutoCompleteTextView actionJeedom;                  // Action Jeedom
+    private AutoCompleteTextView autoCompleteTextViewRetour;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,7 +52,6 @@ public class JeedomFindDialogFragment extends DialogFragment {
 
         okButton     = mParentView.findViewById(R.id.buttonChoisir);
         cancelButton = mParentView.findViewById(R.id.buttonCancel);
-        download      = mParentView.findViewById(R.id.imageButtonDownload);
         actionJeedom = mParentView.findViewById(R.id.actionJeedom);
 
         spinnerCmd         = mParentView.findViewById(R.id.spinnerCmd);
@@ -60,7 +60,9 @@ public class JeedomFindDialogFragment extends DialogFragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                autoCompleteTextViewRetour.setText(actionJeedom.getText());
+                mListener.onOk(autoCompleteTextViewRetour, actionJeedom.getText().toString());
+                dismiss();
             }
         });
 
@@ -71,25 +73,13 @@ public class JeedomFindDialogFragment extends DialogFragment {
             }
         });
 
-        download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Recuperation des data Jeedom
-                if (boxSetting != null) {
-                    DomoUtils.getAllJeedomObjet(context, boxSetting);
-                    DomoUtils.getAllJeedomCmd(context, boxSetting);
-                }
-            }
-        });
-
         loadSpinner();
-
         return mParentView;
     }
 
-    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, BoxSetting boxSetting) {
-        this.boxSetting = boxSetting;
-        mListener = listener;
+    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView) {
+        this.mListener = listener;
+        this.autoCompleteTextViewRetour = autoCompleteTextView;
     }
 
     private void loadSpinner() {
@@ -98,5 +88,39 @@ public class JeedomFindDialogFragment extends DialogFragment {
          */
         EquipementAdapter equipementAdapter = (EquipementAdapter) DomoUtils.createAdapter(context, EQUIPEMENT);
         spinnerEquipements.setAdapter(equipementAdapter);
+        spinnerEquipements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                 @Override
+                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                     DomoEquipement domoEquipement = (DomoEquipement) parent.getAdapter().getItem(position);
+
+                     DomoJsonRPC domoJsonRPCcmd = new DomoJsonRPC(context);
+                     domoJsonRPCcmd.open();
+                     ArrayList<DomoCmd> jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, "info");
+                     domoJsonRPCcmd.close();
+
+                     CmdAdapter cmdAdapter = new CmdAdapter(context, jeedomCmd);
+                     spinnerCmd.setAdapter(cmdAdapter);
+                     Log.d(TAG, "onItemSelected: " + jeedomCmd.size());
+                 }
+
+                 @Override
+                 public void onNothingSelected(AdapterView<?> parent) {
+                 }
+             });
+
+        spinnerCmd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
+                actionJeedom.setText("type=cmd&id=" + domoCmd.getIdCmd());
+                mListener.onOk(autoCompleteTextViewRetour, actionJeedom.getText().toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
+
 }

@@ -26,6 +26,8 @@ import java.util.Locale;
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
@@ -78,7 +80,6 @@ public class WidgetToogleFragment extends Fragment {
     private final DomoRessourceUtils.OnRessourceFragmentListener ressourceFragmentListener = new DomoRessourceUtils.OnRessourceFragmentListener() {
         @Override
         public void onSelectRessource(Boolean isOn, int idRessource) {
-
             if (isOn) {
                 widget.setDomoIdImageOn(idRessource);
                 imageButtonOn.setImageBitmap(bitmapUtils.getBitmapRessource(widget, true));
@@ -87,6 +88,22 @@ public class WidgetToogleFragment extends Fragment {
                 imageButtonOff.setImageBitmap(bitmapUtils.getBitmapRessource(widget, false));
             }
             Log.d("[DOMO", "Ressource " + isOn + " - " + idRessource);
+        }
+    };
+
+
+    /**
+     * Listener de selection de couleur
+     */
+    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+        @Override
+        public void onCancel() {
+
+        }
+
+        @Override
+        public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
+            cmdTextView.setText(cmd);
         }
     };
 
@@ -194,21 +211,31 @@ public class WidgetToogleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_toogle_setting, container, false);
         setHasOptionsMenu(true);
 
-        name               = (AutoCompleteTextView) view.findViewById(R.id.editName);
-        spinnerBox         = (Spinner) view.findViewById(R.id.spinnerBox);
-        spinnerWidgets     = (Spinner) view.findViewById(R.id.spinnerWidgets);
-        linearLayoutWidget = (LinearLayout) view.findViewById(R.id.linearWidget);
-        imageButtonOn      = (ImageButton) view.findViewById(R.id.imageButtonOn);
-        imageButtonOff     = (ImageButton) view.findViewById(R.id.imageButtonOff);
-        isLock             = (CheckBox) view.findViewById(R.id.checkBoxLock);
-        etat               = (AutoCompleteTextView) view.findViewById(R.id.editEtat);
-        on                 = (AutoCompleteTextView) view.findViewById(R.id.editOn);
-        off                = (AutoCompleteTextView) view.findViewById(R.id.editOff);
-        expReg             = (AutoCompleteTextView) view.findViewById(R.id.editExpReg);
-        timeOut            = (AutoCompleteTextView) view.findViewById(R.id.editTimeOut);
+        name               = view.findViewById(R.id.editName);
+        spinnerBox         = view.findViewById(R.id.spinnerBox);
+        spinnerWidgets     = view.findViewById(R.id.spinnerWidgets);
+        linearLayoutWidget = view.findViewById(R.id.linearWidget);
+        imageButtonOn      = view.findViewById(R.id.imageButtonOn);
+        imageButtonOff     = view.findViewById(R.id.imageButtonOff);
+        isLock             = view.findViewById(R.id.checkBoxLock);
+        etat               = view.findViewById(R.id.editEtat);
+        on                 = view.findViewById(R.id.editOn);
+        off                = view.findViewById(R.id.editOff);
+        expReg             = view.findViewById(R.id.editExpReg);
+        timeOut            = view.findViewById(R.id.editTimeOut);
 
         // Chargement des spinners
         loadSpinner();
+
+        etat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find cmd");
+            }
+        });
 
         // Listener de la liste des widgets
         spinnerWidgets.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -1,12 +1,14 @@
 package illimiteremi.domowidget.DomoJSONRPC;
 
+import android.widget.AutoCompleteTextView;
+
 public interface JeedomActionFindListener {
 
     /**
      * Interface with callback methods for Action Find.
      */
-    void onCancel(JeedomFindDialogFragment dialogFragment);
+    void onCancel();
 
-    void onOk(JeedomFindDialogFragment dialogFragment, String cmd);
+    void onOk(AutoCompleteTextView cmdTextView, String cmd);
 
 }

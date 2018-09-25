@@ -102,23 +102,6 @@ public class BoxSettingFragment extends Fragment {
     };
 
     /**
-     * Listener de selection de couleur
-     */
-    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
-
-        @Override
-        public void onCancel(JeedomFindDialogFragment dialogFragment) {
-
-        }
-
-        @Override
-        public void onOk(JeedomFindDialogFragment dialogFragment, String cmd) {
-
-        }
-    };
-
-
-    /**
      * Boite de dialogue erreur configuration BOX
      */
     public static class SettingFragment extends DialogFragment {
@@ -142,7 +125,6 @@ public class BoxSettingFragment extends Fragment {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
-
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 Log.d(TAG, "Réponse API JSON ping : " + extras.getBoolean(BOX_PING));
@@ -471,6 +453,12 @@ public class BoxSettingFragment extends Fragment {
 
             // Envoi de requete à la box Domotique
             DomoUtils.pingRequestToJeedom(context, boxSetting);
+
+            // Recuperation des data Jeedom
+            if (boxSetting != null) {
+                DomoUtils.getAllJeedomObjet(context, boxSetting);
+                DomoUtils.getAllJeedomCmd(context, boxSetting);
+            }
 
             isNew = false;
             return true;

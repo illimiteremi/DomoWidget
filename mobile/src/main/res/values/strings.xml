@@ -146,4 +146,6 @@
     <string name="forum">Forum Jeedom</string>
     <string name="tutoriel">DomoWidget</string>
 
+    <string name="equipement_cmd">Equipements Jeedom</string>
+
 </resources>

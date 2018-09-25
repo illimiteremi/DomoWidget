@@ -2,7 +2,8 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical" android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_border_add_ressource"
         tools:background="@android:color/transparent">

@@ -69,6 +69,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mListener.onCancel();
                 dismiss();
             }
         });
@@ -113,7 +114,6 @@ public class JeedomFindDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
                 actionJeedom.setText("type=cmd&id=" + domoCmd.getIdCmd());
-                mListener.onOk(autoCompleteTextViewRetour, actionJeedom.getText().toString());
             }
 
             @Override

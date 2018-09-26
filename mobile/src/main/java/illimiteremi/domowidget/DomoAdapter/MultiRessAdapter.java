@@ -14,11 +14,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.WidgetMultiFragment;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidgetRess;
 import illimiteremi.domowidget.R;
+
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 
 /**
  * $Description
@@ -123,4 +126,5 @@ public class MultiRessAdapter extends ArrayAdapter<MultiWidgetRess> {
     public int getCount() {
         return (domoRessources != null) ? domoRessources.size() : 0;
     }
+
 }

@@ -28,6 +28,8 @@ import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.MultiRessAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidget;
@@ -40,6 +42,7 @@ import static android.app.Activity.RESULT_OK;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.APPWIDGET_UPDATE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.DEFAULT_TIMEOUT;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.INFO_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.MULTI;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NEW_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
@@ -77,7 +80,6 @@ public class WidgetMultiFragment extends Fragment {
         @Override
         public void onAddRessource(Context context, ArrayList<MultiWidgetRess> multiWidgetRess) {
             Log.d(TAG, "onAddRessource");
-
                 if (multiRessAdapter.isEmpty()) {
                     multiRessAdapter = new MultiRessAdapter(context, multiWidgetRess);
                     listView.setAdapter(multiRessAdapter);
@@ -87,6 +89,22 @@ public class WidgetMultiFragment extends Fragment {
                 }
                 multiRessAdapter.notifyDataSetChanged();
                 DomoRessourceUtils.setListViewHeightBasedOnItems(listView);
+        }
+    };
+
+    /**
+     * Listener de selection des commandes
+     */
+    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+        @Override
+        public void onCancel() {
+            Log.d(TAG, "onCancel: ");
+        }
+
+        @Override
+        public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
+            cmdTextView.setText(cmd);
+            Log.d(TAG, "onOk: ");
         }
     };
 
@@ -218,6 +236,9 @@ public class WidgetMultiFragment extends Fragment {
         // Chargement des spinners
         loadSpinner();
 
+        // init des fragment de selection des commandes
+        initDialogFragment();
+
         spinnerWidgets.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -348,6 +369,21 @@ public class WidgetMultiFragment extends Fragment {
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget.getDomoId());
         updateIntent.setAction(APPWIDGET_UPDATE);
         context.sendBroadcast(updateIntent);
+    }
+
+    /**
+     * initDialogFragment
+     */
+    private void initDialogFragment() {
+        etat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, INFO_CMD);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find cmd");
+            }
+        });
     }
 
 }

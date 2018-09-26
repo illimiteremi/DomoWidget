@@ -27,11 +27,15 @@ import java.util.List;
 
 import illimiteremi.domowidget.DomoAdapter.IconAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.IconSetting;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoBaseSQLite;
 import illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidget;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidgetRess;
 import illimiteremi.domowidget.R;
+
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 
 /**
  * $Description
@@ -139,6 +143,22 @@ public class DomoRessourceUtils {
         private MultiWidgetRess widgetRess;
         private DomoBitmapUtils bitmapUtils;
 
+        /**
+         * Listener de selection des commandes
+         */
+        private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "onCancel: ");
+            }
+
+            @Override
+            public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
+                cmdTextView.setText(cmd);
+                Log.d(TAG, "onOk: ");
+            }
+        };
+
         public MultiWidgetRessourceFragment() {
         }
 
@@ -170,6 +190,17 @@ public class DomoRessourceUtils {
             final ImageButton    imageButtonOn    = (ImageButton) view.findViewById(R.id.imageButtonOn);
             final ImageButton    imageButtonOff   = (ImageButton) view.findViewById(R.id.imageButtonOff);
             Button               addButton        = (Button) view.findViewById(R.id.buttonSave);
+
+            final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+            ressAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragment.setOnJeedomActionFindListener(jeedomActionFindListener, ressAction, ACTION_CMD);
+                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                    fragment.show(ft, "Find Info");
+                }
+            });
 
             if (idRess != 0) {
                 MultiWidgetRess newMultiWidgetRess = new MultiWidgetRess(idWidget);

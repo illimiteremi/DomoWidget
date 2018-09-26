@@ -24,6 +24,8 @@ import android.widget.Toast;
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
@@ -33,8 +35,10 @@ import illimiteremi.domowidget.R;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.APPWIDGET_UPDATE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.INFO_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NEW_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PUSH;
@@ -80,6 +84,22 @@ public class WidgetPushFragment extends Fragment {
                 imageButtonOff.setImageBitmap(bitmapUtils.getBitmapRessource(widget, false));
             }
             Log.d("[DOMO", "Ressource " + isOn + " - " + idRessource);
+        }
+    };
+
+    /**
+     * Listener de selection des commandes
+     */
+    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+        @Override
+        public void onCancel() {
+            Log.d(TAG, "onCancel: ");
+        }
+
+        @Override
+        public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
+            cmdTextView.setText(cmd);
+            Log.d(TAG, "onOk: ");
         }
     };
 
@@ -196,6 +216,9 @@ public class WidgetPushFragment extends Fragment {
 
         // Chargement des spinners
         loadSpinner();
+
+        // init des fragment de selection des commandes
+        initDialogFragment();
 
         // Listener de la liste des widgets
         spinnerWidgets.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -329,5 +352,22 @@ public class WidgetPushFragment extends Fragment {
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget.getDomoId());
         updateIntent.setAction(APPWIDGET_UPDATE);
         context.sendBroadcast(updateIntent);
+    }
+
+    /**
+     * initDialogFragment
+     */
+    private void initDialogFragment() {
+
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+        action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, ACTION_CMD);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Info");
+            }
+        });
     }
 }

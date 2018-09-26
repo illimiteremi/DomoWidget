@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +36,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
     private Button               okButton;                      // Button choisir
     private Spinner              spinnerEquipements;            // Spinner de la liste des equipements
     private Spinner              spinnerCmd;                    // Spinner de la liste des commandes
+    private TextView             textAction;                    // Titre de l'action commandes
     private AutoCompleteTextView actionJeedom;                  // Action Jeedom
 
     private View                     mParentView;
@@ -54,9 +56,12 @@ public class JeedomFindDialogFragment extends DialogFragment {
         okButton     = mParentView.findViewById(R.id.buttonChoisir);
         cancelButton = mParentView.findViewById(R.id.buttonCancel);
         actionJeedom = mParentView.findViewById(R.id.actionJeedom);
+        textAction   = mParentView.findViewById(R.id.textAction);
 
         spinnerCmd         = mParentView.findViewById(R.id.spinnerCmd);
         spinnerEquipements = mParentView.findViewById(R.id.spinnerEquipements);
+
+        textAction.setText("Action - " + cmdType);
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +84,21 @@ public class JeedomFindDialogFragment extends DialogFragment {
         return mParentView;
     }
 
+    /**
+     * setOnJeedomActionFindListener
+     * @param listener
+     * @param autoCompleteTextView
+     * @param cmdType
+     */
     public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView, String cmdType) {
         this.mListener = listener;
         this.autoCompleteTextViewRetour = autoCompleteTextView;
         this.cmdType = cmdType;
     }
 
+    /**
+     * loadSpinner
+     */
     private void loadSpinner() {
         /**
          * Chargement des Spinners

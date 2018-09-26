@@ -96,7 +96,7 @@ public class DomoJsonRPC {
             Cursor c = bdd.query(TABLE_JEEDOM_OBJET, new String[] {
                     UtilsDomoWidget.COL_ID,
                     UtilsDomoWidget.COL_ID_OBJET,
-                    UtilsDomoWidget.COL_NAME}, null , null, null, null, null);
+                    UtilsDomoWidget.COL_NAME}, null , null, null, null, UtilsDomoWidget.COL_NAME + " DESC");
             if (c.getCount() == 0) {
                 Log.e(TAG, "Erreur : Commande non trouvé en BDD !");
                 return null;

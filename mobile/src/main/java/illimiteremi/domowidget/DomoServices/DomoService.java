@@ -143,19 +143,18 @@ public class DomoService extends Service {
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, id)
-                        .setSmallIcon(R.drawable.ic_domo_notification)
-                        .setContentTitle(getString(R.string.domo_service))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setCategory(Notification.CATEGORY_SERVICE)
-                        .addAction(R.drawable.arcade_red_push, "ouvrir",pIntent);
-                Notification notification = mBuilder.build();
+                Notification notification =
+                        new Notification.Builder(this, id)
+                                .setSmallIcon(R.drawable.ic_domo_notification)
+                                .setContentTitle(getString(R.string.domo_service))
+                                .setCategory(Notification.CATEGORY_SERVICE)
+                                .setContentIntent(pIntent)
+                                .build();
                 startForeground(NOTIFICATION_ID, notification);
             } catch (Exception e) {
                 Log.e(TAG, "Erreur : " + e);
             }
         }
-
     }
 
     /**

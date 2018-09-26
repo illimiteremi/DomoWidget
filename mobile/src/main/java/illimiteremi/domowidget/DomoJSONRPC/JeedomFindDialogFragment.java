@@ -11,14 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
 import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
-import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import illimiteremi.domowidget.R;
@@ -27,18 +26,20 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
 
 public class JeedomFindDialogFragment extends DialogFragment {
 
-    private static final String   TAG      = "[RPC]";
+    private static final String  TAG      = "[JEEDOM_RPC]";
 
-    private JeedomActionFindListener mListener;
-    private View mParentView;
-    private Context context;
+    private Context              context;
 
+    private String               cmdType;                       // Type de commande ACTION / INFO
     private Button               cancelButton;                  // Button annuler
     private Button               okButton;                      // Button choisir
     private Spinner              spinnerEquipements;            // Spinner de la liste des equipements
     private Spinner              spinnerCmd;                    // Spinner de la liste des commandes
     private AutoCompleteTextView actionJeedom;                  // Action Jeedom
-    private AutoCompleteTextView autoCompleteTextViewRetour;
+
+    private View                     mParentView;
+    private JeedomActionFindListener mListener;
+    private AutoCompleteTextView     autoCompleteTextViewRetour;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,9 +79,10 @@ public class JeedomFindDialogFragment extends DialogFragment {
         return mParentView;
     }
 
-    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView) {
+    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView, String cmdType) {
         this.mListener = listener;
         this.autoCompleteTextViewRetour = autoCompleteTextView;
+        this.cmdType = cmdType;
     }
 
     private void loadSpinner() {
@@ -92,16 +94,35 @@ public class JeedomFindDialogFragment extends DialogFragment {
         spinnerEquipements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                  @Override
                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                     DomoEquipement domoEquipement = (DomoEquipement) parent.getAdapter().getItem(position);
+                     try {
+                         // Recuperation de l'équipement
+                         DomoEquipement domoEquipement = (DomoEquipement) parent.getAdapter().getItem(position);
 
-                     DomoJsonRPC domoJsonRPCcmd = new DomoJsonRPC(context);
-                     domoJsonRPCcmd.open();
-                     ArrayList<DomoCmd> jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, "info");
-                     domoJsonRPCcmd.close();
+                         // Création de la liste des commandes
+                         ArrayList<DomoCmd> jeedomCmd = new ArrayList<>();
+                         if (domoEquipement.getIdObjet() != -1) {
+                             DomoJsonRPC domoJsonRPCcmd = new DomoJsonRPC(context);
+                             domoJsonRPCcmd.open();
+                             jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, cmdType);
+                             domoJsonRPCcmd.close();
+                         }
 
-                     CmdAdapter cmdAdapter = new CmdAdapter(context, jeedomCmd);
-                     spinnerCmd.setAdapter(cmdAdapter);
-                     Log.d(TAG, "onItemSelected: " + jeedomCmd.size());
+                         // Aucune commande de trouvé pour l'équipement
+                         if(jeedomCmd.size() == 0) {
+                             DomoCmd domoCmd = new DomoCmd();
+                             domoCmd.setIdCmd(-1);
+                             domoCmd.setCmdName(context.getResources().getString(R.string.no_cmd));
+                             jeedomCmd.add(domoCmd);
+                         }
+
+                         // Création de la liste des Commandes // Equipement
+                         Log.d(TAG, "Nombre de commandes : " + jeedomCmd.size());
+                         Collections.reverse(jeedomCmd);
+                         CmdAdapter cmdAdapter = new CmdAdapter(context, jeedomCmd);
+                         spinnerCmd.setAdapter(cmdAdapter);
+                     } catch (Exception e) {
+                         Log.e(TAG, "spinnerEquipements: " + e);
+                     }
                  }
 
                  @Override
@@ -112,8 +133,16 @@ public class JeedomFindDialogFragment extends DialogFragment {
         spinnerCmd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
-                actionJeedom.setText("type=cmd&id=" + domoCmd.getIdCmd());
+                try {
+                    DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
+                    if (domoCmd.getIdCmd() != -1) {
+                        actionJeedom.setText("type=cmd&id=" + domoCmd.getIdCmd());
+                    } else {
+                        actionJeedom.setText("type=cmd&id=");
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "spinnerCmd: " + e);
+                }
             }
 
             @Override
@@ -122,5 +151,4 @@ public class JeedomFindDialogFragment extends DialogFragment {
             }
         });
     }
-
 }

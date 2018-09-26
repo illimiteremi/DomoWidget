@@ -37,8 +37,9 @@ public class EquipementAdapter extends ArrayAdapter<Object> {
 
         DomoEquipement domoEquipement = (DomoEquipement) getItem(position);
         viewHolder.equipementName = convertView.findViewById(R.id.itemName);
-        String name = domoEquipement != null ? domoEquipement.getObjetName() : "Aucun Equipement(s)";
-        viewHolder.equipementName.setText(name);
+       // String name = domoEquipement != null ? domoEquipement.getObjetName() : "Aucun Equipement(s)";
+
+        viewHolder.equipementName.setText(domoEquipement.getObjetName());
 
         // Changement de couleur 1 ligne / 2
         if ((position % 2) == 0) {
@@ -46,6 +47,12 @@ public class EquipementAdapter extends ArrayAdapter<Object> {
         } else {
             viewHolder.equipementName.setBackgroundColor(Color.argb(10,13,151,36));
         }
+
+        // Couleur rouge si pas d'id
+        if (domoEquipement.getIdObjet() == -1) {
+            viewHolder.equipementName.setBackgroundColor(Color.argb(100,255,0,0));
+        }
+
         return convertView;
     }
 

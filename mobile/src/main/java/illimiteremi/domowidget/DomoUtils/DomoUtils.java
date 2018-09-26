@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
@@ -944,6 +945,15 @@ public class DomoUtils {
                 return new WidgetAdapter(context, allVocalObjet);
             case EQUIPEMENT:
                 ArrayList<Object> allEquipementObjet = getAllObjet(context, EQUIPEMENT);
+                DomoEquipement domoEquipement = new DomoEquipement();
+                domoEquipement.setIdObjet(-1);
+                if (allEquipementObjet.size() == 0) {
+                    domoEquipement.setObjetName(context.getResources().getString(R.string.no_objet));
+                } else {
+                    domoEquipement.setObjetName(context.getResources().getString(R.string.select_objet));
+                }
+                allEquipementObjet.add(domoEquipement);
+                Collections.reverse(allEquipementObjet);
                 return new EquipementAdapter(context, allEquipementObjet);
         }
         return null;

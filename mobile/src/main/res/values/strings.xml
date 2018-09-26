@@ -108,7 +108,11 @@
     <string name="default_time_out">Par défaut</string>
     <string name="box_time_out">Temps de réponse</string>
     <string name="no_box">Aucune Box Domotique</string>
+    <string name="no_objet">Aucun équipement</string>
+    <string name="no_cmd">Aucune commande jeedom</string>
     <string name="select_box">Sélectionner une box</string>
+    <string name="select_cmd">Sélectionner une commande</string>
+    <string name="select_objet">Sélectionner un équipement</string>
     <string name="new_box">BOX DOMOTIQUE</string>
     <string name="list_box_name">Liste des Box Domotiques</string>
     <string name="save_box">Configuration enregistrée</string>

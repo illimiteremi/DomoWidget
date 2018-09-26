@@ -26,6 +26,8 @@ public class DomoConstants {
     public static final String ACTION                = "&action=";
     public static final String INTERCATION           = "&type=interact&query=%";
     public static final String CAM_SNAPSHOT          = "&snapshot.cgi";
+    public static final String INFO_CMD              = "INFO";
+    public static final String ACTION_CMD            = "ACTION";
 
     public static final String WIDGET_ERROR          = "Informations Widget !";
 

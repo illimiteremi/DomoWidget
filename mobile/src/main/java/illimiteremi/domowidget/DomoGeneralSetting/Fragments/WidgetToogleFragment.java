@@ -37,9 +37,11 @@ import illimiteremi.domowidget.R;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.APPWIDGET_UPDATE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.DEFAULT_TIMEOUT;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.INFO_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NEW_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.TOOGLE;
@@ -93,7 +95,7 @@ public class WidgetToogleFragment extends Fragment {
 
 
     /**
-     * Listener de selection de couleur
+     * Listener de selection des commandes
      */
     private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
         @Override
@@ -228,15 +230,8 @@ public class WidgetToogleFragment extends Fragment {
         // Chargement des spinners
         loadSpinner();
 
-        etat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat);
-                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                fragment.show(ft, "Find cmd");
-            }
-        });
+        // init des fragment de selection des commandes
+        initDialogFragment();
 
         // Listener de la liste des widgets
         spinnerWidgets.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -386,6 +381,41 @@ public class WidgetToogleFragment extends Fragment {
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget.getDomoId());
         updateIntent.setAction(APPWIDGET_UPDATE);
         context.sendBroadcast(updateIntent);
+    }
+
+    /**
+     * initDialogFragment
+     */
+    private void initDialogFragment() {
+
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+        etat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, INFO_CMD);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Info");
+            }
+        });
+
+        on.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, on, ACTION_CMD);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Action");
+            }
+        });
+
+        off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, off, ACTION_CMD);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Action");
+            }
+        });
     }
 
 }

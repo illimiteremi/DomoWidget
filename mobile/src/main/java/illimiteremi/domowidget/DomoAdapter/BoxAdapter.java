@@ -40,7 +40,7 @@ public class BoxAdapter extends ArrayAdapter<Object> {
         }
 
         BoxSetting boxSetting = (BoxSetting) getItem(position);
-        viewHolder.boxName = (TextView) convertView.findViewById(R.id.itemName);
+        viewHolder.boxName = convertView.findViewById(R.id.itemName);
         String name = boxSetting.getBoxId() == 0 ? boxSetting.getBoxName() : (position + 1) + " - " + boxSetting.getBoxName();
         viewHolder.boxName.setText(name);
 

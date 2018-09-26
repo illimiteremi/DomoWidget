@@ -7,6 +7,11 @@ public class DomoCmd {
     private String  type;                                        // Type de la commande ACTION / INFO
     private Integer idCmd;                                       // Identifiant de la commande
 
+    public DomoCmd() {
+        cmdName = "";
+        idObjet = -1;
+    }
+
     public Integer getIdObjet() {
         return idObjet;
     }

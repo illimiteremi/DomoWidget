@@ -27,6 +27,7 @@ import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
+import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetPush.PushWidget;
@@ -364,7 +365,7 @@ public class WidgetPushFragment extends Fragment {
         action.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, ACTION_CMD);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.ACTION);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Info");
             }

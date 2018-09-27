@@ -26,7 +26,10 @@ import java.util.Objects;
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
+import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
+import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetSeekBar.SeekBarWidget;
@@ -37,8 +40,10 @@ import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.APPWIDGET_UPDATE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.INFO_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NEW_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.SEEKBAR;
@@ -86,6 +91,22 @@ public class WidgetSeekBarFragment extends Fragment {
             DomoUtils.updateObjet(context, widget);
             mColor = color;
             editColor.setBackgroundColor(mColor);
+        }
+    };
+
+    /**
+     * Listener de selection des commandes
+     */
+    private final JeedomActionFindListener jeedomActionFindListener = new JeedomActionFindListener() {
+        @Override
+        public void onCancel() {
+            Log.d(TAG, "onCancel: ");
+        }
+
+        @Override
+        public void onOk(AutoCompleteTextView cmdTextView, String cmd) {
+            cmdTextView.setText(cmd);
+            Log.d(TAG, "onOk: ");
         }
     };
 
@@ -213,6 +234,9 @@ public class WidgetSeekBarFragment extends Fragment {
 
         // Chargement des spinners
         loadSpinner();
+
+        // init des fragment de selection des commandes
+        initDialogFragment();
 
         // Listener de la liste des widgets
         spinnerWidgets.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -358,5 +382,31 @@ public class WidgetSeekBarFragment extends Fragment {
         updateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget.getDomoId());
         updateIntent.setAction(APPWIDGET_UPDATE);
         context.sendBroadcast(updateIntent);
+    }
+
+    /**
+     * initDialogFragment
+     */
+    private void initDialogFragment() {
+
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+        action.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.SLIDER);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Info");
+            }
+        });
+
+        etat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                fragment.show(ft, "Find Info");
+            }
+        });
     }
 }

@@ -19,11 +19,14 @@ import java.util.Collections;
 
 import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
 import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
+import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
 import illimiteremi.domowidget.R;
 
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.COMMANDE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.SLIDER;
 
 public class JeedomFindDialogFragment extends DialogFragment {
 
@@ -31,7 +34,8 @@ public class JeedomFindDialogFragment extends DialogFragment {
 
     private Context              context;
 
-    private String               cmdType;                       // Type de commande ACTION / INFO
+    private DomoConstants.CALLBACK_TYPE callbackType;           // Type de callBack
+    //private String               cmdType;                       // Type de commande ACTION / INFO
     private Button               cancelButton;                  // Button annuler
     private Button               okButton;                      // Button choisir
     private Spinner              spinnerEquipements;            // Spinner de la liste des equipements
@@ -61,7 +65,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
         spinnerCmd         = mParentView.findViewById(R.id.spinnerCmd);
         spinnerEquipements = mParentView.findViewById(R.id.spinnerEquipements);
 
-        textAction.setText("Action - " + cmdType);
+        textAction.setText("Action - " + callbackType.getCmdType());
 
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +92,12 @@ public class JeedomFindDialogFragment extends DialogFragment {
      * setOnJeedomActionFindListener
      * @param listener
      * @param autoCompleteTextView
-     * @param cmdType
+     * @param callbackType
      */
-    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView, String cmdType) {
+    public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView, DomoConstants.CALLBACK_TYPE callbackType) {
         this.mListener = listener;
         this.autoCompleteTextViewRetour = autoCompleteTextView;
-        this.cmdType = cmdType;
+        this.callbackType = callbackType;
     }
 
     /**
@@ -118,7 +122,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
                          if (domoEquipement.getIdObjet() != -1) {
                              DomoJsonRPC domoJsonRPCcmd = new DomoJsonRPC(context);
                              domoJsonRPCcmd.open();
-                             jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, cmdType);
+                             jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, callbackType.getCmdType());
                              domoJsonRPCcmd.close();
                          }
 
@@ -150,10 +154,17 @@ public class JeedomFindDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
-                    if (domoCmd.getIdCmd() != -1) {
-                        actionJeedom.setText("type=cmd&id=" + domoCmd.getIdCmd());
-                    } else {
-                        actionJeedom.setText("type=cmd&id=");
+                    switch (callbackType) {
+                        case INFO:
+                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
+                            break;
+                        case ACTION:
+                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
+                            break;
+                        case SLIDER:
+                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd() + SLIDER);
+                            break;
+                        default: actionJeedom.setText(COMMANDE + "?");
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "spinnerCmd: " + e);

@@ -196,7 +196,7 @@ public class DomoRessourceUtils {
             ressAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fragment.setOnJeedomActionFindListener(jeedomActionFindListener, ressAction, ACTION_CMD);
+                    fragment.setOnJeedomActionFindListener(jeedomActionFindListener, ressAction, DomoConstants.CALLBACK_TYPE.ACTION);
                     FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                     fragment.show(ft, "Find Info");
                 }

@@ -21,6 +21,7 @@ public class DomoConstants {
     public static final String GEOLOC_URL            = "/plugins/geoloc/core/api/jeeGeoloc.php";
 
     public static final String COMMANDE              = "type=cmd&id=";
+    public static final String SLIDER                = "&slider=";
     public static final String GEOLOC                = "id=";
     public static final String SCENARIO              = "type=scenario&id=";
     public static final String ACTION                = "&action=";
@@ -109,6 +110,40 @@ public class DomoConstants {
             return myList;
         }
     }
+
+    public enum CALLBACK_TYPE {
+        INFO          (0, ACTION_CMD),
+        ACTION        (1, ACTION_CMD),
+        SLIDER        (2, INFO_CMD);
+
+        private int     code       = 0;
+        private String  cmdType    = ACTION_CMD;
+
+        /**
+         * CALLBACK_TYPE constructor
+         * @param _code
+         * @param _cmdType
+         */
+        CALLBACK_TYPE(int _code, String _cmdType) {
+            code       = _code;
+            cmdType   = _cmdType;
+        }
+
+        /**
+         * getCode
+         * @return
+         */
+        public int getCode() { return code; }
+
+        /**
+         * getLibelle
+         * @return
+         */
+        public String getCmdType() {
+            return cmdType;
+        }
+    }
+
 
     public enum WIDGET_TYPE {
         UNKNOWN      (-1, ""                             , ""),

@@ -125,7 +125,6 @@ public class DomoService extends Service {
     public void onCreate() {
         super.onCreate();
         this.context = getApplicationContext();
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Android 8.0 Background Execution Limits
             try {

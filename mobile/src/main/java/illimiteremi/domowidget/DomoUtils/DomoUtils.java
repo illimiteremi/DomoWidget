@@ -149,7 +149,12 @@ public class DomoUtils {
         // Démarrage du service
         if (!isServiceRunning(context, DomoService.class) || restart) {
             Intent serviceIntent = new Intent(context, DomoService.class);
-            context.startService(serviceIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(serviceIntent);
+            } else {
+                context.startService(serviceIntent);
+            }
+
         }
     }
 

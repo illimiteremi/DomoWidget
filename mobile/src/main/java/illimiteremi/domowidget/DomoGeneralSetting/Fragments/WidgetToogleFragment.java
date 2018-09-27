@@ -29,6 +29,7 @@ import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
+import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetToogle.ToogleWidget;
@@ -393,7 +394,7 @@ public class WidgetToogleFragment extends Fragment {
         etat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, INFO_CMD);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Info");
             }
@@ -402,7 +403,7 @@ public class WidgetToogleFragment extends Fragment {
         on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, on, ACTION_CMD);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, on, DomoConstants.CALLBACK_TYPE.ACTION);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Action");
             }
@@ -411,7 +412,7 @@ public class WidgetToogleFragment extends Fragment {
         off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, off, ACTION_CMD);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, off, DomoConstants.CALLBACK_TYPE.ACTION);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Action");
             }

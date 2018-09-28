@@ -368,15 +368,16 @@ public class WidgetPushFragment extends Fragment {
         Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
         DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
-        searchActionButton.startAnimation(myAnim);
 
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+        searchActionButton.startAnimation(myAnim);
         searchActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.ACTION);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                fragment.show(ft, "Find Info");
+                fragment.show(ft, "Find Action");
             }
         });
     }

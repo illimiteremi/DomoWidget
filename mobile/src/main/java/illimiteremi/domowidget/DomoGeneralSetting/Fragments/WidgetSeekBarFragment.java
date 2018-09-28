@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -74,6 +76,9 @@ public class WidgetSeekBarFragment extends Fragment {
     private BoxSetting            selectedBox;              // Box domotique utilisé par le widget
     private WidgetAdapter         widgetAdapter;            // Adapter de la liste des widgets
     private SeekBarWidget         widget;                   // Widget
+
+    private ImageButton           searchEtatButton;         // Button recherche etat
+    private ImageButton           searchActionOnButton;     // Button recherche etat
 
     private DomoBitmapUtils       bitmapUtils;              // Boite à outils graphique
     private MenuItem              deleteAction;             // MenuItem Delete
@@ -231,6 +236,8 @@ public class WidgetSeekBarFragment extends Fragment {
         editMin            = view.findViewById(R.id.editMin);
         imageButtonOn      = view.findViewById(R.id.imageButtonOn);
         editColor          = view.findViewById(R.id.editColor);
+        searchEtatButton   = view.findViewById(R.id.searchEtatButton);
+        searchActionOnButton  = view.findViewById(R.id.searchActionOnButton);
 
         // Chargement des spinners
         loadSpinner();
@@ -388,22 +395,27 @@ public class WidgetSeekBarFragment extends Fragment {
      * initDialogFragment
      */
     private void initDialogFragment() {
+        // Creation d'une animation sur la loupe
+        Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
+        DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
 
         final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
 
-        action.setOnClickListener(new View.OnClickListener() {
+        searchEtatButton.startAnimation(myAnim);
+        searchEtatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.SLIDER);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Info");
             }
         });
-
-        etat.setOnClickListener(new View.OnClickListener() {
+        searchActionOnButton.startAnimation(myAnim);
+        searchActionOnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
+                fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.SLIDER);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Info");
             }

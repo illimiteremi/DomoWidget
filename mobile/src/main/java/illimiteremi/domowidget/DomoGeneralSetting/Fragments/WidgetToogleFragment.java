@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -71,6 +73,9 @@ public class WidgetToogleFragment extends Fragment {
     private AutoCompleteTextView  off;                      // Action Off
     private AutoCompleteTextView  expReg;                   // Exp régulière On
     private AutoCompleteTextView  timeOut;                  // TimeOut avant lecture état
+    private ImageButton           searchEtatButton;         // Button recherche etat
+    private ImageButton           searchActionOnButton;     // Button recherche etat
+    private ImageButton           searchActionOffButton;    // Button recherche etat
 
     private BoxSetting            selectedBox;              // Box domotique utilisé par le widget
     private ToogleWidget          widget;                   // Widget
@@ -227,11 +232,14 @@ public class WidgetToogleFragment extends Fragment {
         off                = view.findViewById(R.id.editOff);
         expReg             = view.findViewById(R.id.editExpReg);
         timeOut            = view.findViewById(R.id.editTimeOut);
+        searchEtatButton   = view.findViewById(R.id.searchEtatButton);
+        searchActionOnButton  = view.findViewById(R.id.searchActionOnButton);
+        searchActionOffButton = view.findViewById(R.id.searchActionOffButton);
 
         // Chargement des spinners
         loadSpinner();
 
-        // init des fragment de selection des commandes
+        // Init des fragment de selection des commandes
         initDialogFragment();
 
         // Listener de la liste des widgets
@@ -389,9 +397,15 @@ public class WidgetToogleFragment extends Fragment {
      */
     private void initDialogFragment() {
 
+        // Creation d'une animation sur la loupe
+        Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
+        DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+
         final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
 
-        etat.setOnClickListener(new View.OnClickListener() {
+        searchEtatButton.startAnimation(myAnim);
+        searchEtatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
@@ -400,7 +414,8 @@ public class WidgetToogleFragment extends Fragment {
             }
         });
 
-        on.setOnClickListener(new View.OnClickListener() {
+        searchActionOnButton.startAnimation(myAnim);
+        searchActionOnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, on, DomoConstants.CALLBACK_TYPE.ACTION);
@@ -409,7 +424,8 @@ public class WidgetToogleFragment extends Fragment {
             }
         });
 
-        off.setOnClickListener(new View.OnClickListener() {
+        searchActionOffButton.startAnimation(myAnim);
+        searchActionOffButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, off, DomoConstants.CALLBACK_TYPE.ACTION);

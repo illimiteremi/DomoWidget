@@ -351,12 +351,13 @@ public class WidgetStateFragment extends Fragment {
         Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
         DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
-        searchEtatButton.startAnimation(myAnim);
 
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
+        searchEtatButton.startAnimation(myAnim);
         searchEtatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Etat");

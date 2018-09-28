@@ -11,20 +11,21 @@ import java.util.ArrayList;
 
 import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
 import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
+import illimiteremi.domowidget.DomoWidgetPush.PushWidget;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.REQUEST_OBJET;
 import static illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget.TABLE_JEEDOM_CMD;
 import static illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget.TABLE_JEEDOM_OBJET;
 
-public class DomoJsonRPC {
+public class DomoJsonRpcBDD {
 
-    private static final String TAG      = "[DOMO_JSONRPC]";
+    private static final String TAG      = "[DOMO_JSONRPC_BDD]";
 
     private SQLiteDatabase bdd;
     private final DomoBaseSQLite domoBaseSQLite;
 
-    public DomoJsonRPC(Context context){
+    public DomoJsonRpcBDD(Context context){
         // On créer la BDD et sa table
         domoBaseSQLite = new DomoBaseSQLite(context, UtilsDomoWidget.NOM_BDD, null, UtilsDomoWidget.VERSION_BDD);
     }
@@ -174,6 +175,39 @@ public class DomoJsonRPC {
             // On ferme le cursor
             c.close();
             return listDomoCmd;
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur : " + e);
+            return null;
+        }
+    }
+
+    /**
+     * getCmdByIdCmd
+     * @param domoCmd
+     * @return
+     */
+    public DomoCmd getCmdByIdCmd(DomoCmd domoCmd) {
+
+        // Récupère dans un Cursor
+        try {
+            Cursor c = bdd.query(UtilsDomoWidget.TABLE_JEEDOM_CMD, new String[] {
+                    UtilsDomoWidget.COL_ID,
+                    UtilsDomoWidget.COL_ID_OBJET,
+                    UtilsDomoWidget.COL_NAME,
+                    UtilsDomoWidget.COL_TYPE,
+                    UtilsDomoWidget.COL_ID_CMD}, UtilsDomoWidget.COL_ID_CMD + " = " + domoCmd.getIdCmd(), null, null, null, null);
+            // Si aucun élément n'a été retourné dans la requête, on renvoie null
+            if (c.getCount() == 0) {
+                Log.e(TAG, "Erreur : Widget non trouvé en BDD !");
+                c.close();
+                return null;
+            }
+            // On ferme le cursor
+            // Sinon on se place sur le premier élément
+            c.moveToFirst();
+            DomoCmd domoCmdFind = cursorToDomoCmd(c);
+            c.close();
+            return domoCmdFind;
         } catch (Exception e) {
             Log.e(TAG, "Erreur : " + e);
             return null;

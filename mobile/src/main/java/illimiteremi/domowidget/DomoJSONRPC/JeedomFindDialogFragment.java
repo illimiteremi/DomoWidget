@@ -97,9 +97,12 @@ public class JeedomFindDialogFragment extends DialogFragment {
         // Récuperation de l'objet Commande / id action jeedom
         String commande = autoCompleteTextViewRetour.getText().toString();
         domoCmd = new DomoCmd();
-        String[] allNumber = commande.split("[0-9]");
+        /*
+        String[] allNumber = new String[]{};
+        allNumber = commande.split("[0-9]");
         Log.d(TAG, "setOnJeedomActionFindListener: " + allNumber.length);
-        domoCmd.setIdCmd(Integer.parseInt(allNumber[0]));
+        */
+        domoCmd.setIdCmd(Integer.parseInt(commande.replaceAll("[^0-9]","")));
         Log.d(TAG, "loadSpinner: " + commande + " = " + domoCmd.getIdCmd());
     }
 

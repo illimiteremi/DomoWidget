@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -95,43 +96,67 @@
                     android:paddingLeft="5dp" />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/widget_on"
-                    android:id="@+id/textViewEtat"
-                    android:layout_below="@+id/editKey"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="20dp"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:textSize="18dp" />
-
-                <AutoCompleteTextView
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/editEtat"
-                    android:textSize="15dp"
-                    android:layout_below="@+id/textViewEtat"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_alignEnd="@+id/editKey"
-                    android:hint="type=cmd&amp;id=28"
-                    android:background="#ffffff"
-                    android:paddingLeft="5dp"
-                    android:layout_marginTop="5dp" />
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textViewAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/widget_on"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/editAction"
+                        android:layout_width="292dp"
+                        android:layout_height="19dp"
+                        android:layout_below="@+id/textViewAction"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#ffffff"
+                        android:hint="type=cmd&amp;id=28"
+                        android:paddingStart="5dp"
+                        android:textSize="15sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/searchActionButton"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewAction" />
+
+                    <ImageButton
+                        android:id="@+id/searchActionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@android:color/transparent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@android:drawable/ic_menu_search" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
+                    android:id="@+id/textViewOn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/widget_action_image_on"
-                    android:id="@+id/textViewOn"
                     android:layout_below="@+id/checkBoxLock"
                     android:layout_alignParentStart="true"
-                    android:layout_marginTop="20dp"
-                    android:textStyle="bold"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/widget_action_image_on"
                     android:textColor="#000000"
-                    android:textSize="18dp" />
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <ImageButton
                     android:layout_width="50dp"

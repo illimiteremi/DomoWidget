@@ -68,6 +68,7 @@ public class WidgetPushFragment extends Fragment {
     private BoxSetting            selectedBox;              // Box domotique utilisé par le widget
     private WidgetAdapter         widgetAdapter;            // Adapter de la liste des widgets
     private PushWidget            widget;                   // Widget
+    private ImageButton           searchActionButton;         // Button recherche commande action
 
     private MenuItem              deleteAction;             // MenuItem Delete
 
@@ -210,10 +211,11 @@ public class WidgetPushFragment extends Fragment {
         spinnerBox         = (Spinner) view.findViewById(R.id.spinnerBox);
         spinnerWidgets     = (Spinner) view.findViewById(R.id.spinnerWidgets);
         linearLayoutWidget = (LinearLayout) view.findViewById(R.id.linearWidget);
-        action             = (AutoCompleteTextView) view.findViewById(R.id.editEtat);
+        action             = (AutoCompleteTextView) view.findViewById(R.id.editAction);
         imageButtonOn      = (ImageButton) view.findViewById(R.id.imageButtonOn);
         imageButtonOff     = (ImageButton) view.findViewById(R.id.imageButtonOff);
         isLock             = (CheckBox) view.findViewById(R.id.checkBoxLock);
+        searchActionButton = (ImageButton) view.findViewById(R.id.searchActionButton);
 
         // Chargement des spinners
         loadSpinner();
@@ -362,7 +364,7 @@ public class WidgetPushFragment extends Fragment {
 
         final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
 
-        action.setOnClickListener(new View.OnClickListener() {
+        searchActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.ACTION);

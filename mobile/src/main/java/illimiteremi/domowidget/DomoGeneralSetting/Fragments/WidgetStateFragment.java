@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -38,7 +39,6 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.APPWIDGET_UPDATE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
-import static illimiteremi.domowidget.DomoUtils.DomoConstants.INFO_CMD;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NEW_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.NO_WIDGET;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.STATE;
@@ -64,6 +64,7 @@ public class WidgetStateFragment extends Fragment {
     private LinearLayout          linearLayoutWidget;       // Layout de la configuration du widget
     private TextView              editColor;                // Button de selection coleur widget
     private CheckBox              checkBoxUpdate;           // Mise à jour manuel
+    private ImageButton           searchEtatButton;         // Button recherche commande etat
 
     private BoxSetting            selectedBox;              // Box domotique utilisé par le widget
     private WidgetAdapter         widgetAdapter;            // Adapter de la liste des widgets
@@ -202,6 +203,7 @@ public class WidgetStateFragment extends Fragment {
         unit               = (AutoCompleteTextView) view.findViewById(R.id.editUnit);
         editColor          = (TextView) view.findViewById(R.id.editColor);
         checkBoxUpdate     = (CheckBox) view.findViewById(R.id.checkBoxUpdate);
+        searchEtatButton   = (ImageButton) view.findViewById(R.id.searchActionButton);
 
         // Chargement des spinners
         loadSpinner();
@@ -342,13 +344,13 @@ public class WidgetStateFragment extends Fragment {
      * initDialogFragment
      */
     private void initDialogFragment() {
-        etat.setOnClickListener(new View.OnClickListener() {
+        searchEtatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                fragment.show(ft, "Find cmd");
+                fragment.show(ft, "Find Etat");
             }
         });
     }

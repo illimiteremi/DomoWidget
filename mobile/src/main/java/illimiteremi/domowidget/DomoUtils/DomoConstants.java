@@ -112,7 +112,7 @@ public class DomoConstants {
     }
 
     public enum CALLBACK_TYPE {
-        INFO          (0, ACTION_CMD),
+        INFO          (0, INFO_CMD),
         ACTION        (1, ACTION_CMD),
         SLIDER        (2, INFO_CMD);
 

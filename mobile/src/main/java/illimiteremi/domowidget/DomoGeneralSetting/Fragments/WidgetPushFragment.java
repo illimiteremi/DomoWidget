@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
@@ -362,11 +364,16 @@ public class WidgetPushFragment extends Fragment {
      */
     private void initDialogFragment() {
 
-        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+        // Creation d'une animation sur la loupe
+        Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
+        DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+        searchActionButton.startAnimation(myAnim);
 
         searchActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, action, DomoConstants.CALLBACK_TYPE.ACTION);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find Info");

@@ -34,18 +34,12 @@ public class JeedomFindDialogFragment extends DialogFragment {
 
     private Context              context;
 
-    private DomoConstants.CALLBACK_TYPE callbackType;           // Type de callBack
-    //private String               cmdType;                       // Type de commande ACTION / INFO
-    private Button               cancelButton;                  // Button annuler
-    private Button               okButton;                      // Button choisir
-    private Spinner              spinnerEquipements;            // Spinner de la liste des equipements
-    private Spinner              spinnerCmd;                    // Spinner de la liste des commandes
-    private TextView             textAction;                    // Titre de l'action commandes
-    private AutoCompleteTextView actionJeedom;                  // Action Jeedom
-
-    private View                     mParentView;
-    private JeedomActionFindListener mListener;
-    private AutoCompleteTextView     autoCompleteTextViewRetour;
+    private DomoConstants.CALLBACK_TYPE callbackType;                  // Type de callBack
+    private Spinner                     spinnerEquipements;            // Spinner de la liste des equipements
+    private Spinner                     spinnerCmd;                    // Spinner de la liste des commandes
+    private AutoCompleteTextView        actionJeedom;                  // Action Jeedom
+    private JeedomActionFindListener    mListener;
+    private AutoCompleteTextView        autoCompleteTextViewRetour;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,13 +49,15 @@ public class JeedomFindDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mParentView = inflater.inflate(R.layout.find_cmd_dialog, container, false);
 
-        okButton     = mParentView.findViewById(R.id.buttonChoisir);
-        cancelButton = mParentView.findViewById(R.id.buttonCancel);
+        View mParentView = inflater.inflate(R.layout.find_cmd_dialog, container, false);
+        // Button choisir
+        Button okButton = mParentView.findViewById(R.id.buttonChoisir);
+        // Button annuler
+        Button cancelButton = mParentView.findViewById(R.id.buttonCancel);
         actionJeedom = mParentView.findViewById(R.id.actionJeedom);
-        textAction   = mParentView.findViewById(R.id.textAction);
-
+        // Titre de l'action commandes
+        TextView textAction = mParentView.findViewById(R.id.textAction);
         spinnerCmd         = mParentView.findViewById(R.id.spinnerCmd);
         spinnerEquipements = mParentView.findViewById(R.id.spinnerEquipements);
 

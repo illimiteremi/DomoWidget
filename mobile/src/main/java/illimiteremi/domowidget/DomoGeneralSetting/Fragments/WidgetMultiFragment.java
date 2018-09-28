@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -78,6 +79,7 @@ public class WidgetMultiFragment extends Fragment {
     private MultiWidget             widget;                   // Widget
     private WidgetAdapter           widgetAdapter;            // Adapter de la liste des widgets
     private MenuItem                deleteAction;             // MenuItem Delete
+    private ImageButton searchEtatButton;                     // Button recherche commande etat
 
     // Listener de modification d'une ressource
     public static final DomoRessourceUtils.OnMultiWidgetRessourceFragmentListener ressourceFragmentListener = new DomoRessourceUtils.OnMultiWidgetRessourceFragmentListener() {
@@ -228,14 +230,15 @@ public class WidgetMultiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mutli_setting, container, false);
         setHasOptionsMenu(true);
 
-        name               = (AutoCompleteTextView) view.findViewById(R.id.editName);
-        spinnerBox         = (Spinner) view.findViewById(R.id.spinnerBox);
-        spinnerWidgets     = (Spinner) view.findViewById(R.id.spinnerWidgets);
-        linearLayoutWidget = (LinearLayout) view.findViewById(R.id.linearWidget);
-        etat               = (AutoCompleteTextView) view.findViewById(R.id.editEtat);
-        listView           = (ListView) view.findViewById(R.id.ressourceList);
-        textViewAction     = (TextView) view.findViewById(R.id.textViewAction);
-        timeOut            = (AutoCompleteTextView) view.findViewById(R.id.editTimeOut);
+        name               = view.findViewById(R.id.editName);
+        spinnerBox         = view.findViewById(R.id.spinnerBox);
+        spinnerWidgets     = view.findViewById(R.id.spinnerWidgets);
+        linearLayoutWidget = view.findViewById(R.id.linearWidget);
+        etat               = view.findViewById(R.id.editEtat);
+        listView           = view.findViewById(R.id.ressourceList);
+        textViewAction     = view.findViewById(R.id.textViewAction);
+        timeOut            = view.findViewById(R.id.editTimeOut);
+        searchEtatButton   = view.findViewById(R.id.searchActionButton);
 
         // Chargement des spinners
         loadSpinner();
@@ -387,7 +390,8 @@ public class WidgetMultiFragment extends Fragment {
 
         final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
 
-        etat.setOnClickListener(new View.OnClickListener() {
+        searchEtatButton.startAnimation(myAnim);
+        searchEtatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);

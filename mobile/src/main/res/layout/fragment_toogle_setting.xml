@@ -207,15 +207,16 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageButton
+                    android:id="@+id/imageButtonOn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/imageButtonOn"
-                    android:src="@drawable/toggle_metal_on"
-                    android:background="#00ffffff"
-                    android:scaleType="fitCenter"
                     android:layout_below="@+id/editOn"
                     android:layout_alignStart="@+id/editOn"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#00ffffff"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/toggle_metal_on" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -265,26 +266,26 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageButton
+                    android:id="@+id/imageButtonOff"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/imageButtonOff"
-                    android:src="@drawable/toggle_metal_off"
-                    android:scaleType="fitCenter"
-                    android:background="#00ffffff"
                     android:layout_below="@+id/editOff"
                     android:layout_alignStart="@+id/editOff"
-                    android:layout_marginTop="5dp" />
+                    android:layout_marginTop="10dp"
+                    android:background="#00ffffff"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/toggle_metal_off" />
 
                 <TextView
+                    android:id="@+id/textViewExpReg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/editOff"
+                    android:layout_marginTop="10dp"
                     android:text="@string/widget_reg"
-                    android:id="@+id/textViewExpReg"
-                    android:textStyle="bold"
                     android:textColor="#000000"
                     android:textSize="18dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@+id/editOff"/>
+                    android:textStyle="bold" />
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"

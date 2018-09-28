@@ -166,9 +166,9 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
             toggle.syncState();
         }
 
-        // Démarrage des services si nécessaire.
-        DomoUtils.startVoiceService(context, false);
-        DomoUtils.startService(context, false);
+        // Démarrage des services
+        DomoUtils.startVoiceService(context, true);
+        DomoUtils.startService(context, true);
 
         // Verification des permissions
         checkPermission();

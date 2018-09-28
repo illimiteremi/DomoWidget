@@ -30,7 +30,7 @@ import static illimiteremi.domowidget.DomoUtils.DomoConstants.SLIDER;
 
 public class JeedomFindDialogFragment extends DialogFragment {
 
-    private static final String  TAG      = "[JEEDOM_RPC]";
+    private static final String  TAG      = "[DOMO_RPC]";
 
     private Context              context;
 
@@ -40,6 +40,8 @@ public class JeedomFindDialogFragment extends DialogFragment {
     private AutoCompleteTextView        actionJeedom;                  // Action Jeedom
     private JeedomActionFindListener    mListener;
     private AutoCompleteTextView        autoCompleteTextViewRetour;
+
+    private DomoCmd                     domoCmd;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +93,12 @@ public class JeedomFindDialogFragment extends DialogFragment {
         this.mListener = listener;
         this.autoCompleteTextViewRetour = autoCompleteTextView;
         this.callbackType = callbackType;
+
+        // Récuperation de l'objet Commande / id action jeedom
+        String commande = autoCompleteTextViewRetour.getText().toString();
+        Log.d(TAG, "loadSpinner: " + commande);
+        domoCmd = new DomoCmd();
+               domoCmd.setIdCmd(Integer.parseInt(commande.replaceAll("[^0-9]", "")));
     }
 
     /**
@@ -132,6 +140,21 @@ public class JeedomFindDialogFragment extends DialogFragment {
                          Collections.reverse(jeedomCmd);
                          CmdAdapter cmdAdapter = new CmdAdapter(context, jeedomCmd);
                          spinnerCmd.setAdapter(cmdAdapter);
+
+                         // Position du spinner commande
+                         if (domoCmd != null) {
+                             Log.d(TAG, "loadSpinner: " + domoCmd.getCmdName() + " - " + domoCmd.getIdObjet());
+                             try {
+                                 for(int i = 0; i <= cmdAdapter.getCount()-1; i++) {
+                                     DomoCmd domoCmdList = cmdAdapter.getItem(i);
+                                     if (domoCmdList.getIdCmd() == domoCmd.getIdCmd()) {
+                                         spinnerCmd.setSelection(i);
+                                     }
+                                 }
+                             } catch (Exception e) {
+                                 Log.e(TAG, "loadSpinner: ",e);
+                             }
+                         }
                      } catch (Exception e) {
                          Log.e(TAG, "spinnerEquipements: " + e);
                      }
@@ -170,24 +193,21 @@ public class JeedomFindDialogFragment extends DialogFragment {
             }
         });
 
-        // Récuperation de l'objet Commande / id action jeedom
-        /*
-        String Commande = autoCompleteTextViewRetour.getText().toString();
-        Log.d(TAG, "loadSpinner: " + Commande);
-        DomoCmd selectedDomoCmd = new DomoCmd();
-        selectedDomoCmd.setIdCmd(1756);
-        selectedDomoCmd = (DomoCmd) DomoUtils.getObjetById(context, selectedDomoCmd);
-        Log.d(TAG, "loadSpinner: " + selectedDomoCmd.getCmdName() + " - " + selectedDomoCmd.getIdObjet());
+        // Position du spinner Equipement
+        domoCmd = (DomoCmd) DomoUtils.getObjetById(context, domoCmd);
+        if (domoCmd != null) {
+            Log.d(TAG, "loadSpinner: " + domoCmd.getCmdName() + " - " + domoCmd.getIdObjet());
+            try {
+                for(int i = 0; i <= equipementAdapter.getCount()-1; i++) {
+                    DomoEquipement domoEquipement = (DomoEquipement) equipementAdapter.getItem(i);
+                    if (domoEquipement.getIdObjet() == domoCmd.getIdObjet()) {
+                        spinnerEquipements.setSelection(i);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "loadSpinner: ",e);
+            }
+        }
 
-        // Position du spinner equipement
-        int equipementPos = DomoUtils.getSpinnerPosition(context, selectedDomoCmd);
-        Log.d(TAG, "loadSpinner position: " + equipementPos);
-        //spinnerEquipements.setSelection(equipementPos);
-
-        /*
-        DomoEquipement domoEquipement = new DomoEquipement();
-        domoEquipement.setIdObjet(selectedDomoCmd.getIdObjet());
-        int spinnerEquipement = DomoUtils.getSpinnerPosition(context, domoEquipement);
-        */
     }
 }

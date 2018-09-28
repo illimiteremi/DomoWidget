@@ -11,8 +11,8 @@ buildscript {
 
 ext {
     applicationId = "illimiteremi.domowidget"
-    versionCode   = 253
-    versionName   = '7.0.3'
+    versionCode   = 254
+    versionName   = '7.0.4'
 
     // Load keystore
     keystorePropertiesFile = rootProject.file("keystore.properties");

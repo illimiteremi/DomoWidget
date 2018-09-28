@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
@@ -30,6 +32,7 @@ import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
 import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
+import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
@@ -376,10 +379,17 @@ public class WidgetMultiFragment extends Fragment {
      * initDialogFragment
      */
     private void initDialogFragment() {
+
+        // Creation d'une animation sur la loupe
+        Animation myAnim = AnimationUtils.loadAnimation(context, R.anim.bounce);
+        DomoBitmapUtils.MyBounceInterpolator interpolator = new DomoBitmapUtils.MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+
+        final JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
+
         etat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                JeedomFindDialogFragment fragment = new JeedomFindDialogFragment();
                 fragment.setOnJeedomActionFindListener(jeedomActionFindListener, etat, DomoConstants.CALLBACK_TYPE.INFO);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 fragment.show(ft, "Find cmd");

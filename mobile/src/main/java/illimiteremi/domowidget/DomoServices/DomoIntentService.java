@@ -32,8 +32,7 @@ import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
 import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
-import illimiteremi.domowidget.DomoUtils.DomoUtils;
-import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRpcBDD;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -185,12 +184,12 @@ public class DomoIntentService extends IntentService {
                 JSONObject jsonObject = new JSONObject(jsonData);
                 JSONArray result = jsonObject.getJSONArray("result");
                 Log.d(TAG, objetOrCmd + " - Size : " + result.length());
-                DomoJsonRPC domoJsonRPC = new DomoJsonRPC(getApplicationContext());
+                DomoJsonRpcBDD domoJsonRpcBDD = new DomoJsonRpcBDD(getApplicationContext());
 
                 switch (objetOrCmd) {
                     case REQUEST_OBJET :
-                        domoJsonRPC.open();
-                        domoJsonRPC.deleteData(REQUEST_OBJET);
+                        domoJsonRpcBDD.open();
+                        domoJsonRpcBDD.deleteData(REQUEST_OBJET);
                         for (int i = 0; i < result.length(); i++) {
                             JSONObject row = result.getJSONObject(i);
                             Log.d(TAG, "onResponse: " + row.toString());
@@ -199,13 +198,13 @@ public class DomoIntentService extends IntentService {
                             DomoEquipement objet = new DomoEquipement();
                             objet.setIdObjet(id);
                             objet.setObjetName(name);
-                            domoJsonRPC.insertObjet(objet);
+                            domoJsonRpcBDD.insertObjet(objet);
                         }
-                        domoJsonRPC.close();
+                        domoJsonRpcBDD.close();
                         break;
                     case REQUEST_CMD:
-                        domoJsonRPC.open();
-                        domoJsonRPC.deleteData(REQUEST_CMD);
+                        domoJsonRpcBDD.open();
+                        domoJsonRpcBDD.deleteData(REQUEST_CMD);
                         for (int i = 0; i < result.length(); i++) {
                             JSONObject row = result.getJSONObject(i);
                             int id = row.getInt("id");
@@ -218,9 +217,9 @@ public class DomoIntentService extends IntentService {
                             cmd.setIdCmd(id);
                             cmd.setCmdName(eqType + " - " + name);
                             cmd.setType(type);
-                            domoJsonRPC.insertCmd(cmd);
+                            domoJsonRpcBDD.insertCmd(cmd);
                         }
-                        domoJsonRPC.close();
+                        domoJsonRpcBDD.close();
                         break;
                     }
             } catch (Exception e) {

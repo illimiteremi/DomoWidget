@@ -21,7 +21,7 @@ import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
 import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
 import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
-import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRpcBDD;
 import illimiteremi.domowidget.R;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.COMMANDE;
@@ -50,16 +50,13 @@ public class JeedomFindDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View mParentView = inflater.inflate(R.layout.find_cmd_dialog, container, false);
-        // Button choisir
-        Button okButton = mParentView.findViewById(R.id.buttonChoisir);
-        // Button annuler
+        View mParentView    = inflater.inflate(R.layout.find_cmd_dialog, container, false);
+        Button okButton     = mParentView.findViewById(R.id.buttonChoisir);
         Button cancelButton = mParentView.findViewById(R.id.buttonCancel);
-        actionJeedom = mParentView.findViewById(R.id.actionJeedom);
-        // Titre de l'action commandes
+        actionJeedom        = mParentView.findViewById(R.id.actionJeedom);
         TextView textAction = mParentView.findViewById(R.id.textAction);
-        spinnerCmd         = mParentView.findViewById(R.id.spinnerCmd);
-        spinnerEquipements = mParentView.findViewById(R.id.spinnerEquipements);
+        spinnerCmd          = mParentView.findViewById(R.id.spinnerCmd);
+        spinnerEquipements  = mParentView.findViewById(R.id.spinnerEquipements);
 
         textAction.setText("Action - " + callbackType.getCmdType());
 
@@ -116,7 +113,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
                          // Création de la liste des commandes
                          ArrayList<DomoCmd> jeedomCmd = new ArrayList<>();
                          if (domoEquipement.getIdObjet() != -1) {
-                             DomoJsonRPC domoJsonRPCcmd = new DomoJsonRPC(context);
+                             DomoJsonRpcBDD domoJsonRPCcmd = new DomoJsonRpcBDD(context);
                              domoJsonRPCcmd.open();
                              jeedomCmd = domoJsonRPCcmd.getCmdByObjet(domoEquipement, callbackType.getCmdType());
                              domoJsonRPCcmd.close();
@@ -172,5 +169,25 @@ public class JeedomFindDialogFragment extends DialogFragment {
 
             }
         });
+
+        // Récuperation de l'objet Commande / id action jeedom
+        /*
+        String Commande = autoCompleteTextViewRetour.getText().toString();
+        Log.d(TAG, "loadSpinner: " + Commande);
+        DomoCmd selectedDomoCmd = new DomoCmd();
+        selectedDomoCmd.setIdCmd(1756);
+        selectedDomoCmd = (DomoCmd) DomoUtils.getObjetById(context, selectedDomoCmd);
+        Log.d(TAG, "loadSpinner: " + selectedDomoCmd.getCmdName() + " - " + selectedDomoCmd.getIdObjet());
+
+        // Position du spinner equipement
+        int equipementPos = DomoUtils.getSpinnerPosition(context, selectedDomoCmd);
+        Log.d(TAG, "loadSpinner position: " + equipementPos);
+        //spinnerEquipements.setSelection(equipementPos);
+
+        /*
+        DomoEquipement domoEquipement = new DomoEquipement();
+        domoEquipement.setIdObjet(selectedDomoCmd.getIdObjet());
+        int spinnerEquipement = DomoUtils.getSpinnerPosition(context, domoEquipement);
+        */
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
-import illimiteremi.domowidget.DomoAdapter.CmdAdapter;
 import illimiteremi.domowidget.DomoAdapter.EquipementAdapter;
 import illimiteremi.domowidget.DomoAdapter.WidgetAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.BoxSetting;
@@ -27,7 +25,7 @@ import illimiteremi.domowidget.DomoServices.DomoSerializableWidget;
 import illimiteremi.domowidget.DomoServices.DomoService;
 import illimiteremi.domowidget.DomoWear.WearSetting;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoBoxBDD;
-import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRPC;
+import illimiteremi.domowidget.DomoWidgetBdd.DomoJsonRpcBDD;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoWearBDD;
 import illimiteremi.domowidget.DomoWidgetBdd.IconWidgetBDD;
 import illimiteremi.domowidget.DomoWidgetBdd.LocationWidgetBDD;
@@ -381,13 +379,24 @@ public class DomoUtils {
                     }
                     break;
                 case EQUIPEMENT:
-                    DomoJsonRPC domoJsonRPC = new DomoJsonRPC(context);
-                    domoJsonRPC.open();
-                    ArrayList<DomoEquipement> jeedomObjets = domoJsonRPC.getAllObjet();
-                    domoJsonRPC.close();
+                    DomoJsonRpcBDD domoJsonRpcBDD = new DomoJsonRpcBDD(context);
+                    domoJsonRpcBDD.open();
+                    ArrayList<DomoEquipement> jeedomObjets = domoJsonRpcBDD.getAllObjet();
+                    domoJsonRpcBDD.close();
                     if (jeedomObjets != null) {
                         for (DomoEquipement equipement : jeedomObjets){
                             objects.add(equipement);
+                        }
+                    }
+                    break;
+                case CMD:
+                    DomoJsonRpcBDD domoJsonRPCbis = new DomoJsonRpcBDD(context);
+                    domoJsonRPCbis.open();
+                    ArrayList<DomoCmd> jeedomCmds = domoJsonRPCbis.getAllCmd();
+                    domoJsonRPCbis.close();
+                    if (jeedomCmds != null) {
+                        for (DomoCmd cmd : jeedomCmds){
+                            objects.add(cmd);
                         }
                     }
                     break;
@@ -479,6 +488,13 @@ public class DomoUtils {
                     return webCamWidget;
                 case WEAR:
                     return null;
+                case CMD:
+                    DomoCmd domoCmd = (DomoCmd) object;
+                    DomoJsonRpcBDD domoJsonRPCBdd = new DomoJsonRpcBDD(context);
+                    domoJsonRPCBdd.open();
+                    domoCmd = domoJsonRPCBdd.getCmdByIdCmd(domoCmd);
+                    domoJsonRPCBdd.close();
+                    return domoCmd;
             }
         } else {
             Log.e(TAG, "Erreur : Pas d'objet Widget !");
@@ -893,6 +909,26 @@ public class DomoUtils {
                     for (Object multiObjet : getAllObjet(context, VOCAL)){
                         VocalWidget vocalWidget = (VocalWidget) multiObjet;
                         if (vocalWidget.getDomoId().equals(selectedVocal.getDomoId())) {
+                            return position;
+                        }
+                        position++;
+                    }
+                    break;
+                case CMD:
+                    DomoCmd selectedCmd = (DomoCmd) object;
+                    for (Object multiObjet : getAllObjet(context, EQUIPEMENT)){
+                        DomoEquipement domoEquipement = (DomoEquipement) multiObjet;
+                        if (domoEquipement.getIdObjet().equals(selectedCmd.getIdObjet())) {
+                            return position;
+                        }
+                        position++;
+                    }
+                    break;
+                case EQUIPEMENT:
+                    DomoEquipement selectedEquipement = (DomoEquipement) object;
+                    for (Object multiObjet : getAllObjet(context, EQUIPEMENT)){
+                        DomoEquipement domoEquipement = (DomoEquipement) multiObjet;
+                        if (domoEquipement.getIdObjet().equals(selectedEquipement.getIdObjet())) {
                             return position;
                         }
                         position++;

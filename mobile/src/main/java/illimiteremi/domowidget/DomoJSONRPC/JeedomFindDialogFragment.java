@@ -40,6 +40,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
     private AutoCompleteTextView        actionJeedom;                  // Action Jeedom
     private JeedomActionFindListener    mListener;
     private AutoCompleteTextView        autoCompleteTextViewRetour;
+    private String                      commande;                       // Commande jeedom
 
     private DomoCmd                     domoCmd;
 
@@ -95,15 +96,10 @@ public class JeedomFindDialogFragment extends DialogFragment {
         this.callbackType = callbackType;
 
         // Récuperation de l'objet Commande / id action jeedom
-        String commande = autoCompleteTextViewRetour.getText().toString();
+        commande = autoCompleteTextViewRetour.getText().toString();
         domoCmd = new DomoCmd();
-        /*
-        String[] allNumber = new String[]{};
-        allNumber = commande.split("[0-9]");
-        Log.d(TAG, "setOnJeedomActionFindListener: " + allNumber.length);
-        */
-        domoCmd.setIdCmd(Integer.parseInt(commande.replaceAll("[^0-9]","")));
-        Log.d(TAG, "loadSpinner: " + commande + " = " + domoCmd.getIdCmd());
+        String[] allNumber = commande.split("&");
+        domoCmd.setIdCmd(Integer.parseInt(allNumber[1].replaceAll("[^0-9]","")));
     }
 
     /**
@@ -115,7 +111,6 @@ public class JeedomFindDialogFragment extends DialogFragment {
          */
         EquipementAdapter equipementAdapter = (EquipementAdapter) DomoUtils.createAdapter(context, EQUIPEMENT);
         spinnerEquipements.setAdapter(equipementAdapter);
-
         spinnerEquipements.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                  @Override
                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -141,7 +136,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
                          }
 
                          // Création de la liste des Commandes // Equipement
-                         Log.d(TAG, "Nombre de commandes : " + jeedomCmd.size());
+                         //Log.d(TAG, "Nombre de commandes : " + jeedomCmd.size());
                          Collections.reverse(jeedomCmd);
                          CmdAdapter cmdAdapter = new CmdAdapter(context, jeedomCmd);
                          spinnerCmd.setAdapter(cmdAdapter);
@@ -152,7 +147,8 @@ public class JeedomFindDialogFragment extends DialogFragment {
                              try {
                                  for(int i = 0; i <= cmdAdapter.getCount()-1; i++) {
                                      DomoCmd domoCmdList = cmdAdapter.getItem(i);
-                                     if (domoCmdList.getIdCmd() == domoCmd.getIdCmd()) {
+                                     Log.d(TAG, "loadSpinner: " + domoCmdList.getCmdName() + " - " + domoCmdList.getIdCmd());
+                                     if (domoCmdList.getIdCmd().equals(domoCmd.getIdCmd())) {
                                          spinnerCmd.setSelection(i);
                                      }
                                  }
@@ -175,17 +171,21 @@ public class JeedomFindDialogFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     DomoCmd domoCmd = (DomoCmd) parent.getAdapter().getItem(position);
-                    switch (callbackType) {
-                        case INFO:
-                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
-                            break;
-                        case ACTION:
-                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
-                            break;
-                        case SLIDER:
-                            actionJeedom.setText(COMMANDE + domoCmd.getIdCmd() + SLIDER);
-                            break;
-                        default: actionJeedom.setText(COMMANDE + "?");
+                    if (domoCmd.getIdCmd() != -1) {
+                        switch (callbackType) {
+                            case INFO:
+                                actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
+                                break;
+                            case ACTION:
+                                actionJeedom.setText(COMMANDE + domoCmd.getIdCmd());
+                                break;
+                            case SLIDER:
+                                actionJeedom.setText(COMMANDE + domoCmd.getIdCmd() + SLIDER);
+                                break;
+                            default: actionJeedom.setText(COMMANDE + "?");
+                        }
+                    } else {
+                        actionJeedom.setText(commande);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "spinnerCmd: " + e);
@@ -205,7 +205,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
             try {
                 for(int i = 0; i <= equipementAdapter.getCount()-1; i++) {
                     DomoEquipement domoEquipement = (DomoEquipement) equipementAdapter.getItem(i);
-                    if (domoEquipement.getIdObjet() == domoCmd.getIdObjet()) {
+                    if (domoEquipement.getIdObjet().equals(domoCmd.getIdObjet())) {
                         spinnerEquipements.setSelection(i);
                     }
                 }

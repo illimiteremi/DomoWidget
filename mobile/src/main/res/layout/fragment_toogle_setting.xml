@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -168,11 +169,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Action - On"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="Action - On"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -181,15 +182,16 @@
                         android:layout_width="292dp"
                         android:layout_height="19dp"
                         android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
                         android:background="#ffffff"
                         android:hint="type=cmd&amp;id=28"
                         android:paddingStart="5dp"
                         android:textSize="15sp"
-                        android:layout_marginStart="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/searchActionButton"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewOn" />
 
                     <ImageButton
                         android:id="@+id/searchActionOnButton"
@@ -227,11 +229,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Action - Off"
                         android:textColor="#000000"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="Action - Off"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -240,15 +242,16 @@
                         android:layout_width="292dp"
                         android:layout_height="19dp"
                         android:layout_alignParentStart="true"
+                        android:layout_marginStart="16dp"
                         android:background="#ffffff"
                         android:hint="type=cmd&amp;id=28"
                         android:paddingStart="5dp"
                         android:textSize="15sp"
-                        android:layout_marginStart="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/searchActionButton"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"/>
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewOff" />
 
                     <ImageButton
                         android:id="@+id/searchActionOffButton"

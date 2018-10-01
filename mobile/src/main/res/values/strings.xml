@@ -107,6 +107,9 @@
     <string name="box_url_int">Accès interne</string>
     <string name="default_time_out">Par défaut</string>
     <string name="box_time_out">Temps de réponse</string>
+    <string name="box_equipement">Récuperer les équipements</string>
+    <string name="box_api">Mise à jour</string>
+
     <string name="no_box">Aucune Box Domotique</string>
     <string name="no_objet">Aucun équipement</string>
     <string name="no_cmd">Aucune commande jeedom</string>
@@ -116,6 +119,7 @@
     <string name="new_box">BOX DOMOTIQUE</string>
     <string name="list_box_name">Liste des Box Domotiques</string>
     <string name="save_box">Configuration enregistrée</string>
+    <string name="save_equi">Equipement(s) ajouté(s) : "</string>
 
     <string name="wear_box">Box associée à votre montre</string>
     <string name="wear_time_out">Attente avant interaction (s)</string>

@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +46,8 @@ import okhttp3.ResponseBody;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX_MESSAGE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX_PING;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.DONE;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT_ACTION;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.ERROR;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.JEEDOM_API_URL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.JEEDOM_URL;
@@ -185,7 +188,6 @@ public class DomoIntentService extends IntentService {
                 JSONArray result = jsonObject.getJSONArray("result");
                 Log.d(TAG, objetOrCmd + " - Size : " + result.length());
                 DomoJsonRpcBDD domoJsonRpcBDD = new DomoJsonRpcBDD(getApplicationContext());
-
                 switch (objetOrCmd) {
                     case REQUEST_OBJET :
                         domoJsonRpcBDD.open();
@@ -201,6 +203,7 @@ public class DomoIntentService extends IntentService {
                             domoJsonRpcBDD.insertObjet(objet);
                         }
                         domoJsonRpcBDD.close();
+                        sendEquipementResponseToProvider(result.length());
                         break;
                     case REQUEST_CMD:
                         domoJsonRpcBDD.open();
@@ -720,6 +723,18 @@ public class DomoIntentService extends IntentService {
         callBackIntent.putExtra(BOX_MESSAGE, message);
         sendIntent(callBackIntent);
         Log.d(TAG, "réponse de Jeedom au ping : " + result + " => " + message);
+    }
+
+    /**
+     * sendEquipementResponseToProvider
+     * @param nbEquipement
+     */
+    private void sendEquipementResponseToProvider(int nbEquipement) {
+        Intent callBackIntent = new Intent();
+        callBackIntent.setAction(EQUIPEMENT_ACTION);
+        callBackIntent.putExtra(EQUIPEMENT, nbEquipement);
+        sendIntent(callBackIntent);
+        Log.d(TAG, "réponse de Jeedom RPC : " + nbEquipement + " équipement(s)");
     }
 
     /**

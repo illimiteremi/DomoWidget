@@ -142,7 +142,8 @@
                         android:gravity="center"
                         android:paddingStart="2dp"
                         android:paddingTop="2dp"
-                        android:stretchColumns="0,1,2">
+                        android:stretchColumns="0,1,2"
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -155,6 +156,27 @@
                             android:textSize="18sp" />
 
                     </TableRow>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="@string/box_equipement"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/getEquipements"
+                        style="@android:style/Widget.Holo.Light.ImageButton"
+                        android:layout_width="52dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="sans-serif"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/jeedom"
+                        android:text="@string/box_api" />
 
                         <TextView
                             android:id="@+id/timeOutLevel"

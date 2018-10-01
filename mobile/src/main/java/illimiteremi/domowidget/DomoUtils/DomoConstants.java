@@ -261,6 +261,7 @@ public class DomoConstants {
 
     // BOX
     public static final String  PING_ACTION             = "android.appbox.action.APPBOX_PING";
+    public static final String  EQUIPEMENT_ACTION       = "android.appbox.action.APPBOX_EQUIPEMENT";
 
     // WEAR
     public static final String   UPDATE_WIDGET_WEAR_VALUE = "android.appwidget.action.WEAR_WIDGET_VALUE_UPDATE";

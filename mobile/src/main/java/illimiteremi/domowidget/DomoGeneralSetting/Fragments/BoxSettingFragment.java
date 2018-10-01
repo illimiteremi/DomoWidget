@@ -20,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,8 @@ import yuku.ambilwarna.colorpicker.OnAmbilWarnaListener;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX_MESSAGE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX_PING;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.EQUIPEMENT_ACTION;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PING_ACTION;
 import static illimiteremi.domowidget.DomoUtils.DomoUtils.hideKeyboard;
 
@@ -72,6 +77,7 @@ public class BoxSettingFragment extends Fragment {
 
     private LinearLayout          linearBox;         // Layout de la configuration de la box
     private TextView              editColor;         // TextViex valeur de couleur
+    private ImageButton           equButton;         // Button API JSONRPC
 
     private static int            mColor = 255;      // Couleur default
 
@@ -126,43 +132,56 @@ public class BoxSettingFragment extends Fragment {
         @Override
         public void onReceive(final Context context, Intent intent) {
             Bundle extras = intent.getExtras();
-            if (extras != null) {
-                Log.d(TAG, "Réponse API JSON ping : " + extras.getBoolean(BOX_PING));
-                if (extras.getBoolean(BOX_PING)) {
-                    Toast.makeText(getContext(), getContext().getResources().getString(R.string.save_box), Toast.LENGTH_SHORT).show();
-                } else {
-                    SettingFragment dialogFragment = new SettingFragment();
-                    dialogFragment.setArguments(extras);
-                    getFragmentManager().beginTransaction().add(dialogFragment, "settingError").commitAllowingStateLoss();
-                }
-            }
-            // Mise à jour des widgets
-            DomoUtils.updateAllWidget(context);
+            Log.d(TAG, "onReceive: " + intent.getAction());
+            switch (intent.getAction()) {
+             case PING_ACTION:
+                 if (extras != null) {
+                     Log.d(TAG, "Réponse API JSON PING : " + extras.getBoolean(BOX_PING));
+                     if (extras.getBoolean(BOX_PING)) {
+                         Toast.makeText(getContext(), getContext().getResources().getString(R.string.save_box), Toast.LENGTH_SHORT).show();
+                     } else {
+                         SettingFragment dialogFragment = new SettingFragment();
+                         dialogFragment.setArguments(extras);
+                         getFragmentManager().beginTransaction().add(dialogFragment, "settingError").commitAllowingStateLoss();
+                     }
+                 }
+                 // Mise à jour des widgets
+                 DomoUtils.updateAllWidget(context);
 
-            // Création du JobService
-            Integer timeRepeat = boxSetting.getWidgetRefreshTime();
-            dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
-            dispatcher.cancelAll();
-            if (!timeRepeat.equals(0)) {
-                // Set Extra
-                final Bundle bundle = new Bundle();
-                bundle.putInt("boxId", boxSetting.getBoxId());
-                bundle.putInt("trigger", timeRepeat);
+                 // Création du JobService si necessaire
+                 Integer timeRepeat = boxSetting.getWidgetRefreshTime();
+                 dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(context));
+                 dispatcher.cancelAll();
+                 if (!timeRepeat.equals(0)) {
+                     // Set Extra
+                     final Bundle bundle = new Bundle();
+                     bundle.putInt("boxId", boxSetting.getBoxId());
+                     bundle.putInt("trigger", timeRepeat);
 
-                // Create JOB
-                Job widgetJob = dispatcher.newJobBuilder()
-                        .setService(FireBaseJobService.class)
-                        .setTag("DOMO_WIDGET")
-                        .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                        .setExtras(bundle)
-                        .setTag("[UPDATE_ALL_WIDGET]")
-                        .setRecurring(true)
-                        .setLifetime(Lifetime.FOREVER)
-                        .setTrigger(Trigger.executionWindow((int) timeRepeat, (int) timeRepeat))
-                        .build();
-                // Dispatch Job
-                Log.d(TAG, "Création du Job de rafraichissement des Widgets : " + timeRepeat + " sec");
-                dispatcher.mustSchedule(widgetJob);
+                     // Create JOB
+                     Job widgetJob = dispatcher.newJobBuilder()
+                             .setService(FireBaseJobService.class)
+                             .setTag("DOMO_WIDGET")
+                             .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                             .setExtras(bundle)
+                             .setTag("[UPDATE_ALL_WIDGET]")
+                             .setRecurring(true)
+                             .setLifetime(Lifetime.FOREVER)
+                             .setTrigger(Trigger.executionWindow((int) timeRepeat, (int) timeRepeat))
+                             .build();
+                     // Dispatch Job
+                     Log.d(TAG, "Création du Job de rafraichissement des Widgets : " + timeRepeat + " sec");
+                     dispatcher.mustSchedule(widgetJob);
+                 }
+                 break;
+             case EQUIPEMENT_ACTION:
+                 if (extras != null) {
+                     Toast.makeText(getContext(), context.getString(R.string.save_equi)
+                                                    + extras.getInt(EQUIPEMENT), Toast.LENGTH_LONG).show();
+                     Log.d(TAG, "Réponse API JSON RPC : " + extras.getInt(EQUIPEMENT) + " équipement(s)");
+                 }
+                 break;
+             default:
             }
         }
     };
@@ -186,23 +205,24 @@ public class BoxSettingFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_box_setting, container, false);
         setHasOptionsMenu(true);
 
-        boxName       = (AutoCompleteTextView) view.findViewById(R.id.editBoxName);
-        boxUrlExt     = (AutoCompleteTextView) view.findViewById(R.id.editUrlExt);
-        boxUrlInt     = (AutoCompleteTextView) view.findViewById(R.id.editUrlInt);
-        boxApiKey     = (AutoCompleteTextView) view.findViewById(R.id.editKey);
+        boxName       = view.findViewById(R.id.editBoxName);
+        boxUrlExt     = view.findViewById(R.id.editUrlExt);
+        boxUrlInt     = view.findViewById(R.id.editUrlInt);
+        boxApiKey     = view.findViewById(R.id.editKey);
 
-        boxTimeOut    = (TextView) view.findViewById(R.id.timeOutLevel);
-        timeOutLevel  = (SeekBar) view.findViewById(R.id.timeOutSeekBar);
+        boxTimeOut    = view.findViewById(R.id.timeOutLevel);
+        timeOutLevel  = view.findViewById(R.id.timeOutSeekBar);
 
-        textTextSize  = (TextView) view.findViewById(R.id.textTextSize);
-        widgetTextSize  = (SeekBar) view.findViewById(R.id.sizeSeekBar);
+        textTextSize   = view.findViewById(R.id.textTextSize);
+        widgetTextSize = view.findViewById(R.id.sizeSeekBar);
 
-        textRefreshTime = (TextView) view.findViewById(R.id.textRefreshTime);
-        widgetRefreshTime  = (SeekBar) view.findViewById(R.id.refreshTimeSeekBar);
+        textRefreshTime    = view.findViewById(R.id.textRefreshTime);
+        widgetRefreshTime  = view.findViewById(R.id.refreshTimeSeekBar);
 
-        spinnerBox    = (Spinner) view.findViewById(R.id.spinner);
-        linearBox     = (LinearLayout) view.findViewById(R.id.linearBox);
-        editColor     = (TextView) view.findViewById(R.id.editColor);
+        spinnerBox    = view.findViewById(R.id.spinner);
+        linearBox     = view.findViewById(R.id.linearBox);
+        editColor     = view.findViewById(R.id.editColor);
+        equButton     = view.findViewById(R.id.getEquipements);
 
         spinnerBox.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -318,14 +338,26 @@ public class BoxSettingFragment extends Fragment {
             }
         });
 
+        // Button Accès API JSONRPC
+        equButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Recuperation des data Jeedom
+                if (boxSetting != null) {
+                    DomoUtils.getAllJeedomObjet(context, boxSetting);
+                    DomoUtils.getAllJeedomCmd(context, boxSetting);
+                }
+            }
+        });
+
         // Chargement des spinners
         loadSpinner();
 
         // Creation du receiver (réponse au ping de l'intentService)
         IntentFilter filter = new IntentFilter();
         filter.addAction(PING_ACTION);
-        getContext().registerReceiver(mBroadcastReceiver, filter);
-
+        filter.addAction(EQUIPEMENT_ACTION);
+        context.registerReceiver(mBroadcastReceiver, filter);
         return view;
     }
 
@@ -453,12 +485,6 @@ public class BoxSettingFragment extends Fragment {
 
             // Envoi de requete à la box Domotique
             DomoUtils.pingRequestToJeedom(context, boxSetting);
-
-            // Recuperation des data Jeedom
-            if (boxSetting != null) {
-                DomoUtils.getAllJeedomObjet(context, boxSetting);
-                DomoUtils.getAllJeedomCmd(context, boxSetting);
-            }
 
             isNew = false;
             return true;

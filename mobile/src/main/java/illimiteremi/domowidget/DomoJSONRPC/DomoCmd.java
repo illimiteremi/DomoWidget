@@ -10,6 +10,7 @@ public class DomoCmd {
     public DomoCmd() {
         cmdName = "";
         idObjet = -1;
+        idCmd   = -1;
     }
 
     public Integer getIdObjet() {

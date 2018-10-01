@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,15 +92,20 @@ public class JeedomFindDialogFragment extends DialogFragment {
      * @param callbackType
      */
     public void setOnJeedomActionFindListener(JeedomActionFindListener listener, AutoCompleteTextView autoCompleteTextView, DomoConstants.CALLBACK_TYPE callbackType) {
-        this.mListener = listener;
+        this.mListener                  = listener;
         this.autoCompleteTextViewRetour = autoCompleteTextView;
-        this.callbackType = callbackType;
+        this.callbackType               = callbackType;
 
         // Récuperation de l'objet Commande / id action jeedom
-        commande = autoCompleteTextViewRetour.getText().toString();
-        domoCmd = new DomoCmd();
-        String[] allNumber = commande.split("&");
-        domoCmd.setIdCmd(Integer.parseInt(allNumber[1].replaceAll("[^0-9]","")));
+        try {
+            commande = autoCompleteTextViewRetour.getText().toString();
+            domoCmd = new DomoCmd();
+            String[] allNumber = commande.split("&");
+            domoCmd.setIdCmd(Integer.parseInt(allNumber[1].replaceAll("[^0-9]","")));
+        } catch (Exception e) {
+            Log.e(TAG, "setOnJeedomActionFindListener: ", e);
+        }
+
     }
 
     /**
@@ -199,6 +205,7 @@ public class JeedomFindDialogFragment extends DialogFragment {
         });
 
         // Position du spinner Equipement
+        Log.d(TAG, "loadSpinner: " + domoCmd.getIdCmd());
         domoCmd = (DomoCmd) DomoUtils.getObjetById(context, domoCmd);
         if (domoCmd != null) {
             Log.d(TAG, "loadSpinner: " + domoCmd.getCmdName() + " - " + domoCmd.getIdObjet());

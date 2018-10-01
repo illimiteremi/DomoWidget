@@ -38,6 +38,7 @@
 
         <activity
             android:name=".DomoGeneralSetting.ManageActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:taskAffinity=""
             android:theme="@style/AppTheme.NoActionBar"

@@ -198,7 +198,7 @@ public class DomoJsonRpcBDD {
                     UtilsDomoWidget.COL_ID_CMD}, UtilsDomoWidget.COL_ID_CMD + " = " + domoCmd.getIdCmd(), null, null, null, null);
             // Si aucun élément n'a été retourné dans la requête, on renvoie null
             if (c.getCount() == 0) {
-                Log.e(TAG, "Erreur : Widget non trouvé en BDD !");
+                Log.e(TAG, "Erreur : Commande non trouvé en BDD !");
                 c.close();
                 return null;
             }

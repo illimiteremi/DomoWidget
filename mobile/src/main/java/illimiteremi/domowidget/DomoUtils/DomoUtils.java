@@ -152,7 +152,6 @@ public class DomoUtils {
             } else {
                 context.startService(serviceIntent);
             }
-
         }
     }
 

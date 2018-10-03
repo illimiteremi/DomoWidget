@@ -45,7 +45,7 @@ public class DomoReceiver extends BroadcastReceiver {
                 } catch (Exception e) {
                     Log.e(TAG, "onReceive: ", e);
                 }
-                DomoUtils.startService(context, false);
+                DomoUtils.startService(context, true);
                 break;
             default:
                 // NOTHING

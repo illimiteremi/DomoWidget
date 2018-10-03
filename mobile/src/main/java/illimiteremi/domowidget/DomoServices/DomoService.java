@@ -53,14 +53,16 @@ public class DomoService extends Service {
     private class ListenerGPS implements LocationListener {
 
         private final LocationWidget widget;
+        private final String name;
 
-        ListenerGPS(LocationWidget widget) {
+        ListenerGPS(LocationWidget widget, String name) {
             this.widget = widget;
+            this.name   = name;
         }
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.d(TAG, "onLocationChanged : Widget = " + widget.getDomoName());
+            Log.d(TAG, "onLocationChanged : Widget = " + widget.getDomoName() + " - " + name);
             try {
                 if (location != null) {
                     widget.setDomoLocation(location.getLatitude() + "," + location.getLongitude());
@@ -106,17 +108,16 @@ public class DomoService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (startId == 1) {
             Log.d(TAG, "Démarrage du service DOMO-WIDGET...");
+            // Creation du receiver de maj des widgets
+            createBroadcastReceiver();
+            // Activation du service GPS
+            boolean gpsService  = !DomoUtils.getAllObjet(context, LOCATION).isEmpty();
+            Log.d(TAG, "Activation du service GPS : " + gpsService);
+            if (gpsService) {
+                createLocation();
+            }
         } else {
             Log.d(TAG, "Redémarrage du service DOMO-WIDGET...");
-        }
-        // Creation du receiver de maj des widgets
-        createBroadcastReceiver();
-
-        // Activation du service GPS
-        boolean gpsService  = !DomoUtils.getAllObjet(context, LOCATION).isEmpty();
-        Log.d(TAG, "Activation du service GPS : " + gpsService);
-        if (gpsService) {
-            createLocation();
         }
         return START_STICKY;
     }
@@ -186,14 +187,14 @@ public class DomoService extends Service {
                                                                              + "m / "   + widget.getDomoProvider());
                                 // ListenerGPS - TEMPS
                                 if (!widget.getDomoTimeOut().equals(0)) {
-                                    ListenerGPS timeListener = new ListenerGPS(widget);
+                                    ListenerGPS timeListener = new ListenerGPS(widget, "TIME");
                                     listenerGPSs.add(timeListener);
                                     mLocationManager.requestLocationUpdates(widget.getDomoProvider(), TimeUnit.MINUTES.toMillis(widget.getDomoTimeOut()), 0, timeListener);
                                 }
 
                                 // ListenerGPS - DISTANCE
                                 if (!widget.getDomoDistance().equals(0)) {
-                                    ListenerGPS distanceListener = new ListenerGPS(widget);
+                                    ListenerGPS distanceListener = new ListenerGPS(widget, "DISTANCE");
                                     listenerGPSs.add(distanceListener);
                                     mLocationManager.requestLocationUpdates(widget.getDomoProvider(), TimeUnit.SECONDS.toMillis(10), widget.getDomoDistance(), distanceListener);
                                 }

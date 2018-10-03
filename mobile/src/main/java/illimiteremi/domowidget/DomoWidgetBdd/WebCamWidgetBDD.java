@@ -57,7 +57,7 @@ public class WebCamWidgetBDD {
         values.put(UtilsDomoWidget.COL_ID_WIDGET, widget.getDomoId());
         values.put(UtilsDomoWidget.COL_ID_BOX, widget.getDomoBox());
         values.put(UtilsDomoWidget.COL_URL, widget.getDomoUrl());
-        values.put(UtilsDomoWidget.COL_PORT, widget.getDomoUrl());
+        values.put(UtilsDomoWidget.COL_PORT, widget.getDomoPort());
 
         // On insère l'objet dans la BDD via le ContentValues
         try {

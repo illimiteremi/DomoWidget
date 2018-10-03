@@ -598,6 +598,7 @@ public class WidgetExportFragment extends Fragment {
         ArrayList<Object> widgetObjs =  DomoUtils.getAllObjet(context, WEBCAM);
         for (Object obj  :  widgetObjs) {
             WebCamWidget widget = (WebCamWidget) obj;
+            Log.d(TAG, "exportWebcamWidget: " + ((WebCamWidget) obj).getDomoPort());
             JSONObject json = new JSONObject();
             try {
                 json.put(COL_ID_WIDGET, widget.getDomoId());

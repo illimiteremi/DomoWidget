@@ -211,7 +211,6 @@ public class DomoService extends Service {
         }
     }
 
-
     /**
      * Création du BroadcastReceiver de Mise à jour du Widget
      */
@@ -234,6 +233,7 @@ public class DomoService extends Service {
                                DomoUtils.startVoiceService(context, false);
                             }
                             DomoUtils.updateAllWidget(context);
+                            break;
                         case Intent.ACTION_SCREEN_OFF:
                             if (voiceService) {
                                 DomoUtils.stopVoiceService(context);
@@ -261,7 +261,7 @@ public class DomoService extends Service {
 
     @Override
     public void onDestroy() {
-        // Log.d(TAG, "Service OnDestroy");
+        Log.d(TAG, "Service OnDestroy");
         // Log.d(TAG, "Nombre de Listener GPS à détruire : " + listenerGPSs.size());
         if (listenerGPSs != null) {
             if (listenerGPSs.size() != 0) {

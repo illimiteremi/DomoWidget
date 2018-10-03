@@ -1005,6 +1005,7 @@ public class DomoUtils {
      * @param context
      */
     public static void updateAllWidget(Context context) {
+        Log.d(TAG, "updateAllWidget...");
         // Mise à jour des widgets ACTION
         Intent updateIntent = new Intent(context, WidgetToogleProvider.class);
         updateIntent.setAction(UPDATE_ALL_WIDGET_TOOGLE);

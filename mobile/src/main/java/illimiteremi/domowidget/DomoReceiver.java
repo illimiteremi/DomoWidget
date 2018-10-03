@@ -47,6 +47,8 @@ public class DomoReceiver extends BroadcastReceiver {
                 }
                 DomoUtils.startService(context, false);
                 break;
+            default:
+                // NOTHING
        }
     }
 }

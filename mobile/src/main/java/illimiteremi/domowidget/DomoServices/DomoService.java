@@ -60,7 +60,7 @@ public class DomoService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            // Log.d(TAG, "onLocationChanged : Widget = " + widget.getDomoName());
+            Log.d(TAG, "onLocationChanged : Widget = " + widget.getDomoName());
             try {
                 if (location != null) {
                     widget.setDomoLocation(location.getLatitude() + "," + location.getLongitude());
@@ -222,9 +222,7 @@ public class DomoService extends Service {
 
                 String action = intent.getAction();
                 Log.d(TAG, "Action = " + action);
-
                 Boolean voiceService = !DomoUtils.getAllObjet(context, VOCAL).isEmpty();
-                Log.d(TAG, "Activation du service vocal : " + voiceService);
 
                 if (!isInitialStickyBroadcast()) {
                     switch (action) {

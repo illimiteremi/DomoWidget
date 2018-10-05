@@ -108,16 +108,16 @@ public class DomoService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (startId == 1) {
             Log.d(TAG, "Démarrage du service DOMO-WIDGET...");
-            // Creation du receiver de maj des widgets
-            createBroadcastReceiver();
-            // Activation du service GPS
-            boolean gpsService  = !DomoUtils.getAllObjet(context, LOCATION).isEmpty();
-            Log.d(TAG, "Activation du service GPS : " + gpsService);
-            if (gpsService) {
-                createLocation();
-            }
         } else {
             Log.d(TAG, "Redémarrage du service DOMO-WIDGET...");
+        }
+        // Creation du receiver de maj des widgets
+        createBroadcastReceiver();
+        // Activation du service GPS
+        boolean gpsService  = !DomoUtils.getAllObjet(context, LOCATION).isEmpty();
+        Log.d(TAG, "Activation du service GPS : " + gpsService);
+        if (gpsService) {
+            createLocation();
         }
         return START_STICKY;
     }
@@ -125,6 +125,7 @@ public class DomoService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate: ");
         this.context = getApplicationContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Android 8.0 Background Execution Limits

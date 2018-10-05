@@ -145,14 +145,14 @@ public class DomoUtils {
      */
     public static void startService(Context context, boolean restart){
         // Démarrage du service
-        if (!isServiceRunning(context, DomoService.class) || restart) {
+        //if (!isServiceRunning(context, DomoService.class) || restart) {
             Intent serviceIntent = new Intent(context, DomoService.class);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 context.startForegroundService(serviceIntent);
             } else {
                 context.startService(serviceIntent);
             }
-        }
+        //}
     }
 
     /**

@@ -19,6 +19,7 @@ import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.R;
 
 import static android.util.TypedValue.COMPLEX_UNIT_SP;
+import static illimiteremi.domowidget.DomoUtils.DomoConstants.COMMANDE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.DEFAULT_TIMEOUT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.LOCK_TIME_SEC;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.UPDATE_WIDGET_TOOGLE_CHANGE;
@@ -119,41 +120,47 @@ public class ToogleUtils {
      * Changement d'état du widget
      */
     public void changeToogleState() {
-        Boolean state = Boolean.valueOf(widget.getDomoLastValue());
-        Log.d(TAG, "Valeur connue du widget avant changement d'état = " + state);
-        Log.d(TAG, "Action : " + state + " => " + !state);
-        String widgetAction;
-        if (state) {
-            views.setImageViewBitmap(R.id.widgetButton, ressourceIdOff);
-            widgetAction = widget.getDomoOff();
+
+        if (widget.getDomoOn().equals(COMMANDE) || widget.getDomoOff().equals(COMMANDE)) {
+            Log.d(TAG, "Pas d'action...");
+            checkWidgetValue();
         } else {
-            views.setImageViewBitmap(R.id.widgetButton, ressourceIdOn);
-            widgetAction = widget.getDomoOn();
-        }
-
-        // Mise à jour du widget
-        appWidgetManager.updateAppWidget(widget.getDomoId(), views);
-
-        // Envoi ordre à la box
-        DomoUtils.requestToJeedom(context, selectedBox, widget, widgetAction);
-
-        // Attente avant retour d'etat
-        timeOut = (widget.getDomoTimeOut() == null ? DEFAULT_TIMEOUT : widget.getDomoTimeOut());
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (timeOut > 0) {
-                    timeOut--;
-                    handler.postDelayed(this, 1000);
-                } else {
-                    // Fin TIMER
-                    // Mise à jour du widget
-                    Log.d(TAG, "Fin d'attente avant lecture état !");
-                    checkWidgetValue();
-                }
+            Boolean state = Boolean.valueOf(widget.getDomoLastValue());
+            Log.d(TAG, "Valeur connue du widget avant changement d'état = " + state);
+            Log.d(TAG, "Action : " + state + " => " + !state);
+            String widgetAction;
+            if (state) {
+                views.setImageViewBitmap(R.id.widgetButton, ressourceIdOff);
+                widgetAction = widget.getDomoOff();
+            } else {
+                views.setImageViewBitmap(R.id.widgetButton, ressourceIdOn);
+                widgetAction = widget.getDomoOn();
             }
-        });
+
+            // Mise à jour du widget
+            appWidgetManager.updateAppWidget(widget.getDomoId(), views);
+
+            // Envoi ordre à la box
+            DomoUtils.requestToJeedom(context, selectedBox, widget, widgetAction);
+
+            // Attente avant retour d'etat
+            timeOut = (widget.getDomoTimeOut() == null ? DEFAULT_TIMEOUT : widget.getDomoTimeOut());
+            final Handler handler = new Handler();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (timeOut > 0) {
+                        timeOut--;
+                        handler.postDelayed(this, 1000);
+                    } else {
+                        // Fin TIMER
+                        // Mise à jour du widget
+                        Log.d(TAG, "Fin d'attente avant lecture état !");
+                        checkWidgetValue();
+                    }
+                }
+            });
+        }
     }
 
     /**

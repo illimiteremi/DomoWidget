@@ -18,7 +18,6 @@ import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.R;
 
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.COMMANDE;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.DEFAULT_TIMEOUT;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.LOCK_TIME_SEC;
@@ -41,8 +40,8 @@ public class ToogleUtils {
     private Bitmap                  ressourceIdOn;              // Identifiant de la ressource image On
     private Bitmap                  ressourceIdOff;             // Identifiant de la ressource image Off
     private final AppWidgetManager  appWidgetManager;           // Widget Manager
-    private       int               lockTime = LOCK_TIME_SEC;   // Temps affichage No_data
-    private       int               timeOut;                    // Temps avant retour d'état
+    private int                     lockTime = LOCK_TIME_SEC;   // Temps affichage No_data
+    private int                     timeOut;                    // Temps avant retour d'état
 
     public ToogleUtils(Context context, AppWidgetManager appWidgetManager, RemoteViews views, int appWidgetId) {
 

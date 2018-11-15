@@ -122,7 +122,7 @@ public class ToogleUtils {
     public void changeToogleState() {
 
         if (widget.getDomoOn().equals(COMMANDE) || widget.getDomoOff().equals(COMMANDE)) {
-            Log.d(TAG, "Pas d'action...");
+            Log.d(TAG, "Pas d'action ! Widget en mode info...");
             checkWidgetValue();
         } else {
             Boolean state = Boolean.valueOf(widget.getDomoLastValue());

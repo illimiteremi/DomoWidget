@@ -2,7 +2,6 @@ package illimiteremi.domowidget.DomoAdapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import illimiteremi.domowidget.DomoJSONRPC.DomoCmd;
-import illimiteremi.domowidget.DomoJSONRPC.DomoEquipement;
 import illimiteremi.domowidget.R;
-
-import static android.support.constraint.Constraints.TAG;
 
 public class CmdAdapter extends ArrayAdapter<DomoCmd> {
 

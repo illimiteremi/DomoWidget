@@ -42,5 +42,4 @@ dependencies {
     compileOnly 'com.google.android.wearable:wearable:2.4.0'
 }
 
-
 // adb -s localhost:4444 uninstall illimiteremi.domowidget

@@ -166,12 +166,13 @@ public class BoxSettingFragment extends Fragment {
                              .setExtras(bundle)
                              .setTag("[UPDATE_ALL_WIDGET]")
                              .setRecurring(true)
+                             .setReplaceCurrent(true)
                              .setLifetime(Lifetime.FOREVER)
-                             .setTrigger(Trigger.executionWindow((int) timeRepeat, (int) timeRepeat))
+                             .setTrigger(Trigger.executionWindow(timeRepeat, timeRepeat))
                              .build();
                      // Dispatch Job
                      Log.d(TAG, "Création du Job de rafraichissement des Widgets : " + timeRepeat + " sec");
-                     dispatcher.mustSchedule(widgetJob);
+                     dispatcher.schedule(widgetJob);
                  }
                  break;
              case EQUIPEMENT_ACTION:

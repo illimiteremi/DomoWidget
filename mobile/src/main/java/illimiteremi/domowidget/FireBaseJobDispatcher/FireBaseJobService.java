@@ -40,7 +40,7 @@ public class FireBaseJobService extends JobService {
                 DomoUtils.updateAllWidget(getApplicationContext());
             }
         });
-        return false;
+        return true;
     }
 
     @Override

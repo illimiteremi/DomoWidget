@@ -29,7 +29,7 @@ android {
 
         android.applicationVariants.all { variant ->
             variant.outputs.all {
-                outputFileName = "DomoWidget_${versionName}_${versionCode}.apk";
+                outputFileName = "DomoWidget_${versionName}_${versionCode}.apk"
             }
         }
 
@@ -58,8 +58,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
     wearApp project(':wear')
 
-    implementation 'com.squareup.okio:okio:1.14.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okio:okio:1.+'
+    implementation 'com.squareup.okhttp3:okhttp:3.+'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation files('libs/pocketsphinx-android-5prealpha-release.aar')
 

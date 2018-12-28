@@ -30,6 +30,7 @@ import java.util.Random;
 
 import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.BoxSettingFragment;
+import illimiteremi.domowidget.DomoGeneralSetting.Fragments.EquipementsFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.IconSettingFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.WearSettingFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.WebViewFragment;
@@ -197,6 +198,9 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
         switch (id){
             case R.id.nav_manage:
                 myFragment = new BoxSettingFragment();
+                break;
+            case R.id.equipements:
+                myFragment = new EquipementsFragment();
                 break;
             case R.id.nav_upload_pic:
                 myFragment = new IconSettingFragment();

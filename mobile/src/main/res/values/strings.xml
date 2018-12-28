@@ -87,7 +87,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Titre des fragments -->
-    <string name="fragment_configuration">Gestion Box Domotique</string>
+    <string name="fragment_configuration">Box Domotique</string>
+    <string name="fragment_equipement">Equipements Domotiques</string>
     <string name="fragment_upload_pic">Gestion des icônes</string>
     <string name="fragment_action">Widgets - Action</string>
     <string name="fragment_push">Widgets - Push</string>

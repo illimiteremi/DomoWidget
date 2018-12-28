@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/fragment_configuration" />
-    </group>
+    <item android:title="Gestion">
+        <menu>
+            <item
+                android:id="@+id/nav_manage"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/fragment_configuration" />
+
+            <item
+                android:id="@+id/equipements"
+                android:icon="@drawable/ic_menu_home"
+                android:title="@string/fragment_equipement" />
+        </menu>
+    </item>
 
     <item android:title="Configuration - Widgets">
         <menu>

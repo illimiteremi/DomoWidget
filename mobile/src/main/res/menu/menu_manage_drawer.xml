@@ -11,7 +11,8 @@
             <item
                 android:id="@+id/equipements"
                 android:icon="@drawable/ic_menu_home"
-                android:title="@string/fragment_equipement" />
+                android:title="@string/fragment_equipement"
+                android:visible="false"/>
         </menu>
     </item>
 

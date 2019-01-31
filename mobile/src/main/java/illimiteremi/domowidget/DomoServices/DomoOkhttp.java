@@ -92,7 +92,7 @@ public class DomoOkhttp {
      *
      * @return Instance
      */
-    public static DomoOkhttp getInstance() {
+    public static synchronized DomoOkhttp getInstance() {
         // Log.d(TAG, "getInstance...");
         if (INSTANCE == null) {
             Log.d(TAG, "INSTANCE = NULL");

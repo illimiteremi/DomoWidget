@@ -401,20 +401,28 @@ public class MultiWidgetBDD {
 
         // Traitement si pas de ressource
         Bitmap bitmap;
-        if (c.getCount() != 0) {
-            c.moveToFirst();
-            if (c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_PATH)) == null) {
-                // Image externe
-                int ressourceId = context.getResources().getIdentifier(c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_NAME)), "drawable",  context.getPackageName());
-                bitmap = BitmapFactory.decodeResource(context.getResources(), ressourceId);
+        try {
+            if (c.getCount() != 0) {
+                c.moveToFirst();
+                if (c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_PATH)) == null) {
+                    // Image externe
+                    int ressourceId = context.getResources().getIdentifier(c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_NAME)), "drawable",  context.getPackageName());
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), ressourceId);
+                } else {
+                    // Image interne
+                    bitmap = BitmapFactory.decodeFile(c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_PATH)));
+                }
+                c.close();
+                return Bitmap.createScaledBitmap(bitmap, 96, 96, true);
             } else {
-                // Image interne
-                bitmap = BitmapFactory.decodeFile(c.getString(c.getColumnIndexOrThrow(UtilsDomoWidget.COL_RESS_PATH)));
+                // Valeur par default
+                int ressourceId = context.getResources().getIdentifier(ressource, "drawable",  context.getPackageName());
+                bitmap = BitmapFactory.decodeResource(context.getResources(), ressourceId);
+                return Bitmap.createScaledBitmap(bitmap, 96, 96, true);
             }
-            c.close();
-            return Bitmap.createScaledBitmap(bitmap, 96, 96, true);
-        } else {
-            // Valeur par default
+        } catch (Exception e) {
+            // Valeur par default si erreur
+            Log.e(TAG, "Erreur : " + e);
             int ressourceId = context.getResources().getIdentifier(ressource, "drawable",  context.getPackageName());
             bitmap = BitmapFactory.decodeResource(context.getResources(), ressourceId);
             return Bitmap.createScaledBitmap(bitmap, 96, 96, true);

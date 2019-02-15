@@ -8,6 +8,12 @@ android {
         abortOnError false
     }
 
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId rootProject.ext.applicationId
         minSdkVersion 19
@@ -58,8 +64,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wearable:16.0.1'
     wearApp project(':wear')
 
-    implementation 'com.squareup.okio:okio:1.+'
-    implementation 'com.squareup.okhttp3:okhttp:3.+'
+    implementation 'com.squareup.okio:okio:1.17.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation files('libs/pocketsphinx-android-5prealpha-release.aar')
 

@@ -2,13 +2,17 @@ package illimiteremi.domowidget.DomoUtils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Dialog;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1200,7 +1204,6 @@ public class DomoUtils {
             Log.e(TAG, "Erreur " + e);
         }
     }
-
 }
 
 

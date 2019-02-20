@@ -5,16 +5,13 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -22,13 +19,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 
-import java.util.ArrayList;
+import com.vanniktech.rxpermission.Permission;
+import com.vanniktech.rxpermission.RealRxPermission;
+
 import java.util.Random;
 
-import illimiteremi.domowidget.DomoAdapter.BoxAdapter;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.BoxSettingFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.EquipementsFragment;
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.IconSettingFragment;
@@ -48,12 +44,14 @@ import illimiteremi.domowidget.DomoUtils.FileExplorerActivity;
 import illimiteremi.domowidget.DomoWidgetBdd.DomoBaseSQLite;
 import illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget;
 import illimiteremi.domowidget.R;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 
-import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.BOX;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.LOCATION_LABEL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.MULTI_LABEL;
-import static illimiteremi.domowidget.DomoUtils.DomoConstants.PERMISSION_OK;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.PUSH_LABEL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.SEEKBAR_LABEL;
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.STATE_LABEL;
@@ -76,10 +74,10 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
         Context context = getApplicationContext();
 
         // Init du drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Vérification sur la création / update de la BDD
@@ -138,9 +136,9 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
         } else {
             Log.d(TAG, "Ouverture de DomoWidget...");
             Random random = new Random();
-            Boolean paypal           = random.nextInt(2) == 0 ? true : false;
-            Boolean boxExist         = DomoUtils.getAllObjet(context, BOX).size() == 0 ? false : true;
-            Boolean networkAvailable = isNetworkAvailable();
+            boolean paypal           = random.nextInt(2) == 0;
+            boolean boxExist         = DomoUtils.getAllObjet(context, BOX).size() != 0;
+            boolean networkAvailable = isNetworkAvailable();
             extras                   = new Bundle();
             myFragment               = new BoxSettingFragment();
 
@@ -167,17 +165,25 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
             toggle.syncState();
         }
 
-        // Démarrage des services
-        DomoUtils.startVoiceService(context, true);
-        DomoUtils.startService(context, true);
-
         // Verification des permissions
-        checkPermission();
+        @SuppressWarnings("unused") final Disposable subscribe = checkRxPermission(getApplicationContext())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(permission -> {
+                    // Permissions acceptées / Fichier pdf correct
+                    if (permission) {
+                        Log.d(TAG, "Permission OK !");
+                        // Démarrage des services
+                        DomoUtils.startVoiceService(context, true);
+                        DomoUtils.startService(context, true);
+                    } else {
+                        Log.e(TAG, "Permission KO");
+                    }
+                }, throwable -> Log.e(TAG, "Error : " + throwable.getMessage()));
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -190,7 +196,7 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment myFragment = null;
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         Bundle extras = new Bundle();
 
@@ -259,27 +265,12 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.main_fragment, myFragment).commitAllowingStateLoss();
         }
-
         return true;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_OK: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permission accordée !");
-                } else {
-                    Log.d(TAG, "Permission non accordée !");
-                }
-            }
-        }
-    }
-
     /**
-     * Check internet
-     * @return
+     * Check internet connexion
+     * @return boolean
      */
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -288,25 +279,29 @@ public class ManageActivity extends AppCompatActivity implements NavigationView.
     }
 
     /**
-     * checkPermission
+     * checkRxPermission
+     * @param context : context de l'app
+     * @return Signle<Boolean>
      */
-    private void checkPermission() {
-        // Vérification des permissions
-        ArrayList<String> permissionsNeeded = new ArrayList<>();
-        permissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        permissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        permissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION);
-        permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        permissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
-
-        for (String permission : permissionsNeeded) {
-            if (ContextCompat.checkSelfPermission(this, permission) == PERMISSION_DENIED) {
-                Log.d(TAG, "Demande de permission : " + permission);
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    // Permission deja refusé par l'utilisateur
-                    ActivityCompat.requestPermissions(this, permissionsNeeded.toArray(new String[permissionsNeeded.size()]), PERMISSION_OK);
-                }
-            }
-        }
+    private static Single<Boolean> checkRxPermission(final Context context) {
+        return RealRxPermission.getInstance(context)
+                .requestEach(Manifest.permission.READ_EXTERNAL_STORAGE,
+                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                             Manifest.permission.ACCESS_COARSE_LOCATION,
+                             Manifest.permission.ACCESS_FINE_LOCATION,
+                             Manifest.permission.RECORD_AUDIO
+                )
+                .all(permission -> {
+                    // Check Permission
+                    Log.d(TAG, "Permission : " + permission);
+                    return permission.state() == Permission.State.GRANTED;
+                })
+                .flatMap((Function<Boolean, Single<Boolean>>) granted -> {
+                    if (granted) {
+                        // Run Ex open Pdf
+                        return Single.just(true);
+                    }
+                    return Single.error(new SecurityException("Veuillez accepter les permissions"));
+                });
     }
 }

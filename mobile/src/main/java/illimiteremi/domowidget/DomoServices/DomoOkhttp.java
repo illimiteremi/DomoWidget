@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
@@ -17,6 +19,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 
 import static illimiteremi.domowidget.DomoUtils.DomoConstants.READ_TIME_OUT;
@@ -59,6 +62,7 @@ public class DomoOkhttp {
                                     new TrustManager[] {TrustAllX509TrustManager.INSTANCE}).getSocketFactory(),
                             TrustAllX509TrustManager.INSTANCE)
                    // .sslSocketFactory(sslSocketFactory, trustManager)
+                   // .connectionSpecs(Arrays.asList(ConnectionSpec.COMPATIBLE_TLS))
                     .hostnameVerifier(new HostnameVerifier() {
                         @SuppressLint("BadHostnameVerifier")
                         @Override
@@ -120,4 +124,6 @@ public class DomoOkhttp {
         }
         return client;
     }
+
+
 }

@@ -3,7 +3,7 @@ package yuku.ambilwarna.colorpicker;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,6 +12,8 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.DialogFragment;
 
 public class AmbilWarnaDialogFragment extends DialogFragment implements View.OnTouchListener, View.OnClickListener {
     private int mColorOriginal;

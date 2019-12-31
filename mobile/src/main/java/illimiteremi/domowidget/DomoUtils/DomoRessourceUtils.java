@@ -6,8 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +34,6 @@ import illimiteremi.domowidget.DomoWidgetBdd.UtilsDomoWidget;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidget;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidgetRess;
 import illimiteremi.domowidget.R;
-
-import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 
 /**
  * $Description

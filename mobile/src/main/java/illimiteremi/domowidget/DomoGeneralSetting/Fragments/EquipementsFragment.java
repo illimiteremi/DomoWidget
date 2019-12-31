@@ -1,19 +1,13 @@
 package illimiteremi.domowidget.DomoGeneralSetting.Fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
 
-import illimiteremi.domowidget.DomoJSONRPC.JeedomActionFindListener;
-import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
-import illimiteremi.domowidget.DomoUtils.DomoConstants;
 import illimiteremi.domowidget.R;
 
 public class EquipementsFragment extends Fragment {

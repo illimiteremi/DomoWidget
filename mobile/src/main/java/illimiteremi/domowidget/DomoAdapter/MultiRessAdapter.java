@@ -1,8 +1,8 @@
 package illimiteremi.domowidget.DomoAdapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +14,11 @@ import android.widget.TextView;
 import java.util.List;
 
 import illimiteremi.domowidget.DomoGeneralSetting.Fragments.WidgetMultiFragment;
-import illimiteremi.domowidget.DomoJSONRPC.JeedomFindDialogFragment;
 import illimiteremi.domowidget.DomoUtils.DomoBitmapUtils;
 import illimiteremi.domowidget.DomoUtils.DomoRessourceUtils;
 import illimiteremi.domowidget.DomoUtils.DomoUtils;
 import illimiteremi.domowidget.DomoWidgetMulti.MultiWidgetRess;
 import illimiteremi.domowidget.R;
-
-import static illimiteremi.domowidget.DomoUtils.DomoConstants.ACTION_CMD;
 
 /**
  * $Description
